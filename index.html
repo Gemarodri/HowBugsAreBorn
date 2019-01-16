@@ -2,7 +2,7 @@
 <html lang="en-us">
   <head>
     <meta charset="UTF-8">
-    <title> Replication Package by Gemarodri</title>
+    <title> Replication Package of How Bugs Are Born</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -12,57 +12,48 @@
   <body>
     <section class="page-header">
       <h1 class="project-name"> Replication Package </h1>
-      <h2 class="project-tagline"> Reproducibility and Credibility in Empirical Software Engineering: A Case Study based on a Systematic Literature Review of the use of the SZZ algorithm</h2>
-      <h3>Gema Rodríguez-Pérez (1), Gregorio Robles (1), Jesús M. González-Barahona (1)</h3>
-      <h4 class="project-tagline">(1) Universidad Rey Juan Carlos (Madrid, Spain)</h4>
-      <a href="https://github.com/Gemarodri/replication/tree/gh-pages
+      <h2 class="project-tagline"> How Bugs Are Born: A Model to Identify How Bugs Are Introduced in Software Components </h2>
+      <h3>Gema Rodríguez-Pérez (1), Gregorio Robles (1), Alexander Serebrenik (2), Andy Zaidman (3), Daniel M. German (4), Jesús M. González-Barahona (1) </h3>
+      <h4 class="project-tagline">(1) University King Juan Carlos (Madrid, Spain)</h4>
+      <h4 class="project-tagline">(2) Eindhoven University of Technology (Eindhoven, The Netherlands)</h4>
+      <h4 class="project-tagline">(3) Delft University of Technology (Delft, The Netherlands)</h4>
+      <h4 class="project-tagline">(4) University of Victoria (Victoria, Canada)</h4>
+      <a href="https://github.com/Gemarodri/HowBugsAreBorn/
 " class="btn">View on GitHub</a>
-      <a href="https://github.com/Gemarodri/replication/archive/gh-pages.zip" class="btn">Download .zip</a>
-      <a href="https://github.com/Gemarodri/replication
-/tarball/gh-pages" class="btn">Download .tar.gz</a>
+      <a href="https://github.com/Gemarodri/HowBugsAreBorn/archive/master.zip" class="btn">Download .zip</a>
+      <a href="https://github.com/Gemarodri/HowBugsAreBorn/
+/tarball/master" class="btn">Download .tar.gz</a>
     </section>
 
     <section class="main-content">
-     <h1>
-<a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a> Data </h1>
-<h3>SZZ: "When do changes Induce Fixed?"</h1>
-<p> The csv table with the list of those papers that have cited SZZ from Google Scholar is available <a href="https://github.com/Gemarodri/replication/blob/gh-pages/Results/citationsWhenDoChange-GScholar.csv">here</a>.</p>
-<p> The csv table with the list of those papers that have cited SZZ from Semantic Scholar is available <a href="https://github.com/Gemarodri/replication/blob/gh-pages/Results/citationsWhenDoChange-ScholarSemantic.csv">here</a>.</p>
-<h3>SZZ-1: "Automatic identification of bug-introducing changes"</h3>
-<p> The csv table with the list of those papers that have cited SZZ-1 from Google Scholar is available <a href="https://github.com/Gemarodri/replication/blob/gh-pages/Results/citationsAutomatic-GScholar.csv">here</a>.</p>
-<p> The csv table with the list of those papers that have cited SZZ-1 from Semantic Scholar is available <a href="https://github.com/Gemarodri/replication/blob/gh-pages/Results/citationsAutomatic-SSemantic.csv">here</a>.</p>
-<h3>SZZ-2: "SZZ Revisited: Verifying When Changes Induce Fixes" </h3>
- <p> The csv table with the list of those papers that have cited SZZ-2 from Google Scholar is available <a href="https://github.com/Gemarodri/replication/blob/gh-pages/Results/citationsRevisited-GScholar.csv">here</a>.</p>
- <p> The csv table with the list of those papers that have cited SZZ-2 from Semantic Scholar is available <a href="https://github.com/Gemarodri/replication/blob/gh-pages/Results/citationsRevisited-SScholar.csv">here</a>.</p>
-
 <h1>
-<a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a> Procedure </h1>
-  <p> In the SLR we only considered studies that use both the whole algorithm or the second part of the SZZ algorithm. We identified a subset of 192 papers that fullfilled with this criteria and from which we extracted data.</p>
-  <p> We have extracted the following context data information </p>
+<a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a> Raw Data </h1>
+<h3> Nova </h1>
+<p> <a href="https://github.com/Gemarodri/replication/blob/gh-pages/Results/citationsWhenDoChange-GScholar.csv"></a>.</p>
+<h3> ElasticSearch </h3>
+<p> <a href="https://github.com/Gemarodri/replication/blob/gh-pages/Results/citationsWhenDoChange-GScholar.csv"></a>.</p>
+      
+<h1>
+<a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a> Analysis </h1>
+  <p> </p>
+  <p> How to make operational the model </p>
 <ul>
-  <li>Paper ID</li>
-  <li>Does it carry out a manual analysis?</li>
-  <li>Does it use the SZZ, SZZ-1 or SZZ-2 algorithm?</li>
-  <li>Does it aware of the TTV in the first part?</li>
-  <li>Does it aware of the TTV in the second part?</li>
-  <li>Does it provide a versioned implementation of the SZZ?</li>
-  <li>Does it provide a detailed description of the data and methods used?</li>
-  <li>Does it provide a replication package?</li>
+  <li> Identify the BFC </li>
+  <li> Determine whether a bug is present</li>
+  <li> Determine the BIC </li>
+  <li> Perfect fixing</li>
 </ul>
 
 <h1>
-<a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a> Results </h1>
- <p> The csv table with the data (listed below) of each paper is available <a href="https://github.com/Gemarodri/replication/blob/gh-pages/Results/SZZ-Sheet1.csv">here</a>.</p>
- <p> The references included in the paper whith the passed and deleted articles is available <a href="https://github.com/Gemarodri/replication/blob/gh-pages/Results/anexo.bib">here</a>.</p>
- <p> The JSON files with the data of the papers analyzed after the filtering (2) are available <a href="https://github.com/Gemarodri/replication/blob/gh-pages/Results/afterFiltering">here</a>.</p>
- <p> The algorithm to remove false positives is <a href="https://github.com/Gemarodri/replication/blob/gh-pages/Results/algorithm1.png"> here</a>. And, the algorithm to remove duplicates is <a href="https://github.com/Gemarodri/replication/blob/gh-pages/Results/algorithm2.png"> here </a>.</p>
- <p> The chi-square script and the statistical results are <a href="https://github.com/Gemarodri/replication/blob/gh-pages/Results/scripts">here</a>.</p>
+<a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a> Golden Set </h1>
+ <p> <a href="https://github.com/Gemarodri/replication/blob/gh-pages/Results/SZZ-Sheet1.csv"></a>.</p>
 
 
 <h3>
 <a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors and Contributors</h3>
 
-<p> Gregorio Robles (<a href="https://github.com/gregoriorobles" class="user-mention">@grex</a>), Jesus M. Gonzalez-Barahora (<a href="https://github.com/jgbarah" class="user-mention">@jgbarah</a>), and Gema Rodriguez (<a href="https://github.com/gemarodri" class="user-mention">@gemarodri</a>).</p>
+<p> Gregorio Robles (<a href="https://twitter.com/gregoriorobles" class="user-mention">@gregoriorobles</a>), Jesus M. Gonzalez-Barahora (<a href="https://twitter.com/jgbarah" class="user-mention">@jgbarah</a>), and Gema Rodriguez (<a href="https://twitter.com/gerope90" class="user-mention">@gerope90</a>).</p>
+<p> Alexander Serebrenik (<a href="https://twitter.com/aserebrenik" class="user-mention">@aserebrenik</a>), Andy Zaidman (<a href="https://twitter.com/aserebrenik" class="user-mention">@azaidman</a>), and Daniel M. German (<a href="https://twitter.com/dmgerman" class="user-mention">@dmgerman</a>).</p>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/Gemarodri/replication">Replication Package</a> is maintained by <a href="https://github.com/Gemarodri">Gemarodri</a>.</span>
