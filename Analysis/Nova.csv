@@ -1,0 +1,61 @@
+IDBR;IDBFC;Description;Comments by developers;FFC;BIC
+1185290;52919;Co-evolution Internal;“It is not intuitive”,”this doesn’t work on py27 unless all_tenants=1.”;874e272a(is not a ipc);
+1270825;90321;Forgotten Code;;?;?
+1294939;82423;Wrong control flow;“root cause is try to get a vif but it is not created yet”, “since objects/virtual_interface.py may return a NULL point”;65dbf21(is not a ipc), e5b93d09d70(is not a ipc);65dbf21?,e5b93d0?
+1300788;84431;Exception handling;“There are cases when”;efb66531b?(is not a ipc);efb66531b?
+1305897;123005;Incompatibility;“depending on the underlying hardware”,”The Hyper-V driver is not aware of this constraint”;73da55e?, d1a2e10869?(first commit in one file), 2b9e5b16bb?(first commit in other file);
+1307791;89298;Memory lack/Segmentation Fault;“the volumes should be detached. but actually, the volumes are still in state of ‘in-use’”;77dd6a0;77dd6a0
+1314677;108733;Processing/Design;“it appears that CellsManager creates an instance of CellStateManager with no arguments”;88ab936;88ab936
+1322926;95356;Forgotten Code;;bae26322;bae26322?
+1336127;106477;Processing;“That’s not the desired behavior”;2c62e34;2c62e34
+1343080;129856;wrong logic;“nobody really uses the ‘application/vnd.openstack.image’ links”,”since the link URI returned in it is wrong.”;e7aa4022374fb(is not a ipc);e7aa4022374fb (is not a ipc)
+1350224;128508;Bug in API;“This is incorrect and is a bug in the VMware driver,”;942b9cd;
+1367363;120196;Memory Lack;“Shutting down a libvirt-lxc based instance will leak the nbd device.”;0fcbb7b;0fcbb7b
+1370177;186911;Forgotten Code/External Changes;“But Nova didn’t do it now:”,”It was changed by https://github.com/openstack/nova/commit/33e3d4c6b9e0b11500fe47d861110be1c1981572”,”The following commit: 33e3d4c6b9e0b11500fe47d861110be1c1981572 wrongly drops some of the block device mapping information that is needed”;33e3d4c6b9;33e3d4c6b9
+1370590;138901;Co-evolution Internal;“These calls now need to provide disk_info to _create_domain_and_network ”;1690a1a;
+1371677;174836;Processing;Forgotten Code;5fa74bc;5fa74bc
+1373741;151195;Co-evolution Internal;“Now v2.1 API is provided on /v2.1 URL as the default but the links does not show v2.1 like the following:”;a1baa24?;
+1375379;124814;Corner Cases/Processing;;e71e8c2;e71e8c2
+1381468;128624;Typo;;30871e870;30871e870
+1382630;129333;Wrong Control Flow;“This bug was introduced when the new build_instances path was added”;b199471;b199471
+1392798;134603;Processing/Corner cases;“Instance is still displayed as Running and set to 1”;a9d0313c(is not a ipc);a9d0313c
+1402535;184676;Processing/Memory Lack;“this issue will be solved by in /nova/virt/libvirt/volume.py function _disconnect_volume_multipath_iscsi , remove call self._rescan_iscsi(). ”;933365a58;933365a58
+1402728;141829;Wrong Control Flow;“Ensure that”, “That is if ….”;2bcda65;2bcda65
+1403544;142752;Design Issue/Evolution-Internal;“Key name is trated as None”,”V2.1 API stop empty keyname by json-schema”,”Since the API enforces that name is not null”;6b16c87;6b16c87
+1408024;144451;Exception handling;;862bf3d?;862bf3d?
+1414515;149923;Bug in API;“The join() method was not documented properly,”;8880aad;
+1418298;153123;Wrong Control Flow;;ba925464;ba925464?
+1419002;153906;Forgotten Code;“Expected behaviour”;671766cb(is not a ipc);?
+1424647;158327;Processing/Wrong control flow;;d2cbb9a;d2cbb9a
+1431571;164178;Forgotten Code;bug in a test file;?;?
+1434855;166540;Processing;;abc656d;abc656d
+1436693;167905;Wrong Control Flow;“So the root cause might be addressed separately, but this exception should be avoided and logged.”;8fcf6a7?;8fcf6a7?
+1437855;168701;Processing/Evolution-Internal;;1b2c121?,9a47137?;1b2c121?,9a47137?
+1438226;170190;Co-evolution external;Changes affecting the code, “CPU pinning support was implemented as part of this blueprint:”,”However, CPU pinning support is broken in some libvirt versions”;d4706b8;
+1441000;171079;Processing/Corner cases;“this will lead confusion to admins”;7dd6a4a;7dd6a4a
+1438331;169446;Exception handling;;13e2bd0;13e2bd0?
+1442795;173213;Co-evolution External;“seems this can only reproduced by using xenapi virt driver, since currently it’s the only driver which supports get_all_bw_counters()”;7a500ec?,5aa5229?;
+1443697;173170;Corner cases/Processing;“The root cause of the problem is this code in vmops.py:1332”;f3f1a53;f3f1a53?
+1443970;173362;Wrong COntrol Flow;“This happens because in file nova/network/manager.py in method _do_create_networks() the variable ‘enable_dhcp’ is incorrectly used in loop”;4476419;4476419
+1447249;176395;Forgotten Code;“When building the configdrive, we weren’t passing the injected_files parameter from spawn()”;1682c5b;1682c5b
+1448075;177186;Hyppthetical Scenario;“The recent compute rpc api version bump missed out on the security group”,”This change eliminates future problems”;?;?
+1449028;178188;Bug in API;“Further investigation has highlighted issues with NUMA tuning in general on these versions”,”the entire NUMA tuning feature is broken on these versions”;c380987;
+1453274;181708;Typo;“the following line:”,”which fails with the UnicodeDecodeError because …”;60c90f7;60c90f7?
+1454451;182766;Wrong Control Flow;“The problem only shows up when the following sequence happens”;53099f3;?
+1459021;186087;Co-evolution Internal;“nova vmware unit tests failing with oslo.vmware 0.13.0”,”logstash shows this failing starting today, the same day oslo.vmware 0.13.0 was released” (Maybe the reason 1668fef9cabea6a23023aab6b97617b4368b14d6, but the changed line was OK);bf8c75b;
+1460079;187251;Wrong Control Flow;“For a long while though, much of the code would not use this instance system metadata”;?;?
+1460875;192043;Co-evolution Internal;“API call fails”;?;
+1466390;193117;Wrong Control Flow;;501ff41;501ff41
+1467451;194070;Wrong Control flow;””;0e02db2;0e02db2
+1475356;205683;Processing/Exception handling;“In order to this work properly”;0eb7e35;0eb7e35?
+1475911;218973;Forgotten Code;“The usage should be ..”;e310985;e310985
+1478702;206236;Co-evolution Internal;“when we added the preserve pre-existing ports stuff in the neutron v2 API in nova.”;?;
+1481078;208642;Typo;Typo, “Introduced in Kilo release here:”,”but is being used as if it were a boolean value.”;31f2084;31f2084?
+1481164;208796;Co-evolution Internal;“Since that https://review.openstack.org/#/c/189632/ is merged, root device name of volume backed instances is /dev/vdb with libvirt.”;?;
+1483022;211716;Exception Handling;“nova/network/neutronv2/api.py’s _create_port method can raise an InvalidInput exception”;5dd47c2;5dd47c2
+1486541;214583;Co-evolution Internal;“The instance delete code paths were changed to use new-world bdm objects in commit f5071bd1ac00ed68102d37c8025d36df6777cd9e.”,”This change replace the old bdm lookup call to use objects instead.”;f5071bd1ac00ed68?;
+1492255;220490;Co-evolution Internal;“Ie4ffd458456d03b0b817b01bbed391f359240db2 changed some TestCases names with the consequence that those tests were becoming not excluded and consequently the cells job was failing.”;e4184ea28e21b86;
+1494467;222346;Co-Evolution external;“During CI testing, we found that it should be changed to the following”;96bb7f9a20?;
+1503975;232367;Forgotten Code;“The module wasn’t correctly importing the opt”;799a925(is not a ipc);799a925
+1505471;233914;Corner Case;“Is subject to failure”,”Driver will not recover if local …”;64e167eb6;64e167eb6
+1410622;152112;Bug in API;“nova is still broken with boto==2.35*”, “Bug 1408987 fixed one auth issue…But when trying to uncap the requirement on master we hit two new failures ”;f7b1af9e13;

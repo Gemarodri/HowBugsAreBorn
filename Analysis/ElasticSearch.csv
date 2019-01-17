@@ -1,0 +1,61 @@
+IDBR;IDBFC;Description;Comments by developers;FFC;BIC
+4814;af1513f9;Forgotten Code;“That forgot to release the star offsets”;4271d57;4271d57
+8125;d12ae19;Exception handling;“Bulk API changed behavior for status code”, “It obviously failed to be a case we covered”, “Te exception for the failure was not caught”;61c21f9;61c21f9
+9511;a8a35d7;Forgotten code;“This required additional logic to the edge assignment in order to correctly segment the connected components.”, “Prior to 1.2.3 the ring orientation logic was incorrectly computed”;0c2d12b;?
+5165;3dec916;Corner cases/Processing;“the first if statement and an incorrect value will be used in the next statement”;3ca0239;3ca0239
+13334;c6da8d5;Corner cases;“Should not ignore any wildcards that occurs elsewhere in the expression”;52859e3? (is not a ipc);?
+4417;fe86edde;Forgotten Code/Segmentation Fault;””;892dadca (is not a ipc)?;?
+3274;2dcc664;Co-evolution Internal;;fe0a1d424dc?, 9bf686ef?;
+3820;565c212;Co-evolution Internal;“After updating the elasticshearch package files in … can’t be read anymore.”, “The old post installation script”;bccf0b1;
+1072;355f80ad;Bug in external API;” FastVectorHighlihgter failed with StringIndexOutOfBoundsException”;cee29ded;
+4581;beaa915;Typo;“It should be”;f444ed4 (is not a ipc)?;f444ed4 ?
+1154;31ea01bbc;Forgotten Code/;;b3337c3;b3337c3
+484;598225f;Forgotten Code;;cdc33e1;cdc33e1
+16246;1556750;Wrong Control Flow;“Should do a deepcopy instead of ….”;57d6971;57d6971
+2566;d6b613a;Forgotten Code;;2442e1fb(is not a ipc);2442e1fb
+864;ffc8c3b68;Wrong control flow;“Weird error message on syntax error”;8f32467;8f32467
+1134;cbb1c35f;Processing;“make it 30s back”;61ad8b6;61ad8b6
+3242;42b3f06;Wrong control flow/ Forgotten Code;;05e0b4d4e(is not a ipc);05e0b4d4e
+7686;9c8beb8;Forgotten Code/Corner cases;“Be stricter parsing ids”,”This is to prevent the case where”;c3f3c26;c3f3c26
+5177;3e10810a;Forgotten Code;“https://github.com/elastic/elasticsearch/issues/5161”;8819f91?;?
+7640;31b63b1;Co-evolution external;;e78bbbf3(is not a ipc);
+3551;8668479;Co-evolution External;“Github chanegs a bit download url for master”,”We need to update plugin”;b199471;
+5048;6106944;Segmentation Fault;;c7f6c52;c7f6c52
+8438;0c94314;Wrong control flow;;3c9c9f33;3c9c9f33
+2608;20ce01b;Wrong control flow;“Add additional query validation”;167d358 (is not a ipc);167d358
+14782;9e4a0cb;Corner cases;“Confusing exception when ”;904cbf534 (is not a ipc);904cbf534
+12193;2ea45fd;Forgotten Code;“This was a simply matter of a missing line”;15a62448;15a62448
+1814;a76d914c;Hypothetical Scenarios;“will not decompress the source to convert it to string”;1423731;1423731?
+10113;35a58d87;Wrong control flow;(many many lines and files touched) the BFC closes 3 bug reports;?;?
+16484;230495264;Forgotten Code/ Processing;;c7f6c5266d (its not a ipc);?
+1130;8f6de295;Forgotten Code;;9bf686ef62?;9bf686ef62?
+16790;4c6cf7e;Forgotten Code;“The plugin install is not honouring the JAVA_OPT anymore”;1e209e3802(it is not a pc);1e209e3802(it is not a pc)
+5195;ad8a482d;Null Pointer Exception;;b799b7a;b799b7a?
+3267;7790d2b;Forgotten Code/Design Issue;“The MultigetAPI stops with a …. if …”;9bf686e;9bf686e
+2546;b951351;Wrong control flow;“Check for null query ”;f55fa4223? (is not a ipc),180d225016?(is not a ipc);f55fa4223?,180d225016?
+15858;12df1e7a;Corner Cases;“I changed the behavior of minimum should match to fix this issue:”;0cde90fcb10c9(is not a ipc);0cde90fcb10c9
+1162;b70694c;Forgotten Code;“Update Settings”;d4547c629;d4547c629
+764;c2a0e0b;Forgotten code;;4c34840;4c34840?
+1948;0c732b8;Corner cases;“Wrongly using analyzer”;3b967040da2 (is not a ipc);3b967040da2
+8507;a94fb92;Processing;“A bug was introduced in 1.4”,”Used to work on”, “with ES 1.4.0 an exception occurs”;3c142e5;eb1b0b15
+1458;4c13a9d5;Processing;;4c13a9d5;5cb8613?
+3560;109e294;Forgotten Code;;4930b93;4930b93
+200;a7ad295;Wrong control Flow;“ungraceful shutdown of the master and start of replacement node might cause”;cb0d7d4;cb0d7d4
+8893;7d5a15e;Forgotten Code/Wrong Logic;“it suppose to support doc but it overrides context”,”forgets to serialize doc values settings”;85eb0ea;85eb0ea
+7740;b75d1d8;Hypothetical Scenarios;“We should make that abstract to force implementations for it.”;7c959e7ec?;?
+6018;85a0b76;Bug in external API;“This commit upgrades to the latest Lucene 4.8.1”;2755eec;
+9317;7ca2ef9;Forgotten Code;“Thi bug was introduced by #8454”, “By adding the child docid buffering”;5714b0a;5714b0a
+261;c987e8a;Exception handling/Forgotten Code;(forgotten if/else);b3337c3;b3337c3?
+1380;bd87f8;Null Pointer Exception/Wrong control flow;;adc3dc0;adc3dc0
+7623;aadbfa4;Corner cases;“in the case of a node client holding no data”;575250e;575250e
+1725;31b793;Corner cases;;?;?
+1960;be01e8f;Wrong Control Flow;;ebd6316;ebd6316
+1626;a1a3022;Wrong control flow/Segmentation Fault;;4180a7f7;4180a7f7
+5021;e1c1120;Corner Cases;;c7f6c5266;c7f6c5266
+8526;15db5b;Processing;“We don’t have to set XLimit and YLimit depending on”;5aa0a8438f(is not a ipc);5aa0a8438f
+4564;6c23ace;Wrong control flow;” the variable didn’t get replaced with the current ‘*’ value, but with the empty string, which leads to an error as empty”;b3337c312765?;b3337c312765?
+15257;fab4439;Forgotten Code;“It looks _analyze API sets char_filters as token_filters”;?;?
+5948;aa4dc09;Processing;“but there should be consistency on”,”That is why some columns in _cat/allocation might be empty”;b35ca1a;b35ca1a
+4987;056ad0a;Forgotten Code;“This patch changes the behaviour”,;e52daa967?;e52daa967?
+2991;29da61;Corner cases;;7397007e05;7397007e05
+8580;d60500f;Wrong Control Flow;“This query used to work fine on 1.3.5:”;3c142e5;3c142e5

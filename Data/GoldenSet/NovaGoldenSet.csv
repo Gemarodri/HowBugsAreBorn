@@ -1,0 +1,654 @@
+#ID;#BFC;BR-Message;BFC-Message;Files;FFM;BIC;#FFM;#BIC;FoundSZZ;FoundSZZ-1;Earliest;Latest;NumPC;#T-commit;#Token=#BIC;EarliestT;LatestT;NumPCT
+1294939;e08ce4de920b68c84ac45be8a657a95113688780;"Add a fixed IP to an instance failed 
++--------------------------------------+-------+-------------+ | ID | Label | CIDR | +--------------------------------------+-------+-------------+ | be95de64-a2aa-42de-a522-37802cdbe133 | vmnet | 10.0.0.0/24 | | 0fd904f5-1870-4066-8213-94038b49be2e | abc | 10.1.0.0/24 | | 7cd88ead-fd42-4441-9182-72b3164c108d | abd | 10.2.0.0/24 | +--------------------------------------+-------+-------------+
+nova add-fixed-ip test15 0fd904f5-1870-4066-8213-94038b49be2e
+failed with following logs
+2014-03-19 03:29:30.546 7822 ERROR nova.openstack.common.rpc.amqp [req-fd087223-3646-4fed-b0f6-5a5cf50828eb d6779a827003465db2d3c52fe135d926 45210fba73d24dd681dc5c292c6b1e7f] Exception during message handling 2014-03-19 03:29:30.546 7822 TRACE nova.openstack.common.rpc.amqp Traceback (most recent call last): 2014-03-19 03:29:30.546 7822 TRACE nova.openstack.common.rpc.amqp File ""/usr/lib/python2.6/site-packages/nova/openstack/common/rpc/amqp.py"", line 461, in _process_data 2014-03-19 03:29:30.546 7822 TRACE nova.openstack.common.rpc.amqp **args) 2014-03-19 03:29:30.546 7822 TRACE nova.openstack.common.rpc.amqp File ""/usr/lib/python2.6/site-packages/nova/openstack/common/rpc/dispatcher.py"", line 172, in dispatch 2014-03-19 03:29:30.546 7822 TRACE nova.openstack.common.rpc.amqp result = getattr(proxyobj, method)(ctxt, **kwargs) 2014-03-19 03:29:30.546 7822 TRACE nova.openstack.common.rpc.amqp File ""/usr/lib/python2.6/site-packages/nova/network/manager.py"", line 772, in add_fixed_ip_to_instance 2014-03-19 03:29:30.546 7822 TRACE nova.openstack.common.rpc.amqp self._allocate_fixed_ips(context, instance_id, host, [network]) 2014-03-19 03:29:30.546 7822 TRACE nova.openstack.common.rpc.amqp File ""/usr/lib/python2.6/site-packages/nova/network/manager.py"", line 214, in _allocate_fixed_ips 2014-03-19 03:29:30.546 7822 TRACE nova.openstack.common.rpc.amqp vpn=vpn, address=address) 2014-03-19 03:29:30.546 7822 TRACE nova.openstack.common.rpc.amqp File ""/usr/lib/python2.6/site-packages/nova/network/manager.py"", line 881, in allocate_fixed_ip 2014-03-19 03:29:30.546 7822 TRACE nova.openstack.common.rpc.amqp self.quotas.rollback(context, reservations) 2014-03-19 03:29:30.546 7822 TRACE nova.openstack.common.rpc.amqp File ""/usr/lib/python2.6/site-packages/nova/network/manager.py"", line 859, in allocate_fixed_ip 2014-03-19 03:29:30.546 7822 TRACE nova.openstack.common.rpc.amqp 'virtual_interface_id': vif['id']} 2014-03-19 03:29:30.546 7822 TRACE nova.openstack.common.rpc.amqp TypeError: 'NoneType' object is unsubscriptable 2014-03-19 03:29:30.546 7822 TRACE nova.openstack.common.rpc.amqp
+";"Add virtual interface before add fixed IP on nova-network 
+nova allow user to add fixed IP to an instance when the instance
+is running. This action will fail due to no virtual interface
+will be created before create fixed ip.
+TypeError: 'NoneType' object is unsubscriptable will be reported.
+
+";nova/network/manager.py;0;1;0;542958fac7445a14dea;0;0;New Lines;New Lines;0;0;0;New Lines;New Lines;0
+1300788;98fb5e56ef96c0c6a8754276e5f8c9c0b7e50fed;"VMware: exceptions when SOAP reply message has no body 
+Minesweeper logs have the following:
+2014-03-26 11:37:09.753 CRITICAL nova.virt.vmwareapi.driver [req-3a274ea6-e731-4bbc-a7fc-e2877a57a7cb MultipleCreateTestJSON-692822675 MultipleCreateTestJSON-47510170] In vmwareapi: _call_method (session=52eb4a1e-04de-de0d-5c6a-746a430570a2) 2014-03-26 11:37:09.753 13830 TRACE nova.virt.vmwareapi.driver Traceback (most recent call last): 2014-03-26 11:37:09.753 13830 TRACE nova.virt.vmwareapi.driver File ""/opt/stack/nova/nova/virt/vmwareapi/driver.py"", line 856, in _call_method 2014-03-26 11:37:09.753 13830 TRACE nova.virt.vmwareapi.driver return temp_module(*args, **kwargs) 2014-03-26 11:37:09.753 13830 TRACE nova.virt.vmwareapi.driver File ""/opt/stack/nova/nova/virt/vmwareapi/vim.py"", line 196, in vim_request_handler 2014-03-26 11:37:09.753 13830 TRACE nova.virt.vmwareapi.driver raise error_util.VimFaultException(fault_list, excep) 2014-03-26 11:37:09.753 13830 TRACE nova.virt.vmwareapi.driver VimFaultException: Server raised fault: ' 2014-03-26 11:37:09.753 13830 TRACE nova.virt.vmwareapi.driver SOAP body not found 2014-03-26 11:37:09.753 13830 TRACE nova.virt.vmwareapi.driver 2014-03-26 11:37:09.753 13830 TRACE nova.virt.vmwareapi.driver while parsing SOAP envelope 2014-03-26 11:37:09.753 13830 TRACE nova.virt.vmwareapi.driver at line 1, column 38 2014-03-26 11:37:09.753 13830 TRACE nova.virt.vmwareapi.driver 2014-03-26 11:37:09.753 13830 TRACE nova.virt.vmwareapi.driver while parsing HTTP request before method was determined 2014-03-26 11:37:09.753 13830 TRACE nova.virt.vmwareapi.driver at line 1, column 0' 2014-03-26 11:37:09.753 13830 TRACE nova.virt.vmwareapi.driver 2014-03-26 11:37:09.754 WARNING nova.virt.vmwareapi.vmops [req-3a274ea6-e731-4bbc-a7fc-e2877a57a7cb MultipleCreateTestJSON-692822675 MultipleCreateTestJSON-47510170] In vmwareapi:vmops:_destroy_instance, got this exception while un-registering the VM: Server raised fault: ' SOAP body not found
+while parsing SOAP envelope at line 1, column 38
+while parsing HTTP request before method was determined at line 1, column 0'
+There are cases when the suds returns a message with no body.
+";"VMware: validate that VM exists on backend prior to deletion 
+Attempting to delete an instance that does not exist on the backend
+throws an exception (for example UnregisterVM may return this when
+running the CI).
+";nova/virt/vmwareapi/vmops.py;0;1;0;e517e5668ab;0;0;New Lines;New Lines;0;0;0;New Lines;New Lines;0
+1305897;1b20a40aa18c0f248256f2ae36e328b4a7cc20c1;"Hyper-V driver failing with dynamic memory due to virtual NUMA 
+Starting with Windows Server 2012, Hyper-V provides the Virtual NUMA functionality. This option is enabled by default in the VMs depending on the underlying hardware.
+However, it's not compatible with dynamic memory. The Hyper-V driver is not aware of this constraint and it's not possible to boot new VMs if the nova.conf parameter 'dynamic_memory_ratio' > 1.
+The error in the logs looks like the following: 2014-04-09 16:33:43.615 18600 TRACE nova.virt.hyperv.vmops HyperVException: WMI job failed with status 10. Error details: Failed to modify device 'Memory'. 2014-04-09 16:33:43.615 18600 TRACE nova.virt.hyperv.vmops 2014-04-09 16:33:43.615 18600 TRACE nova.virt.hyperv.vmops Dynamic memory and virtual NUMA cannot be enabled on the same virtual machine. - 'instance-0001c90c' failed to modify device 'Memory'. (Virtual machine ID F4CB4E4D-CA06-4149-9FA3-CAD2E0C6CEDA) 2014-04-09 16:33:43.615 18600 TRACE nova.virt.hyperv.vmops 2014-04-09 16:33:43.615 18600 TRACE nova.virt.hyperv.vmops Dynamic memory and virtual NUMA cannot be enabled on the virtual machine 'instance-0001c90c' because the features are mutually exclusive. (Virtual machine ID F4CB4E4D-CA06-4149-9FA3-CAD2E0C6CEDA) - Error code: 32773
+In order to solve this problem, it's required to change the field 'VirtualNumaEnabled' in 'Msvm_VirtualSystemSettingData' (option available only in v2 namespace) while creating the VM when dynamic memory is used.
+";"Fixes Hyper-V dynamic memory issue with vNUMA 
+vNUMA and dynamic memory are mutually exclusive, so the former
+needs to be disabled for instances where dynamic memory is enabled.
+";nova/virt/hyperv/vmutils.py, nova/virt/hyperv/vmutilsv2.py;1;0;0;0;0;0;73da55e;73da55e;1;0;0;New Lines;New Lines;0
+1307791;54f4600c82241ad6ae6768d3dcd1e1755dac4ddc;"Volumes still in use after deleting a shelved instance with user volumes 
+After deleting a shelved instance with user volumes, the volumes should be detached. but actually, the volumes are still in state of ""in-use"".";"Clean bdms and networks after deleting shelved VM 
+After deleting the shelved offloaded instance with user volumes,
+the bdms and networks info should be cleanup. This patch use local
+deleting to cleanup the instance info.
+";nova/compute/api.py;0;1;0;3dff4335661;1;1;64e167e;1e8df2f;7;3dff4335661;1;14fa718(no bic);4866045(no bic);8
+1314677;695191fa89387d96e60120ff32965493c844e7f5;"nova-cells fails when using JSON file to store cell information 
+As recommended in http://docs.openstack.org/havana/config-reference/content/section_compute-cells.html#cell-config-optional-json I'm creating the nova-cells config with the cell information stored in a json file. However, when I do this nova-cells fails to start with this error in the logs:
+2014-04-29 11:52:05.240 16759 CRITICAL nova [-] __init__() takes exactly 3 arguments (1 given) 2014-04-29 11:52:05.240 16759 TRACE nova Traceback (most recent call last): 2014-04-29 11:52:05.240 16759 TRACE nova File ""/usr/bin/nova-cells"", line 10, in <module> 2014-04-29 11:52:05.240 16759 TRACE nova sys.exit(main()) 2014-04-29 11:52:05.240 16759 TRACE nova File ""/usr/lib/python2.7/dist-packages/nova/cmd/cells.py"", line 40, in main 2014-04-29 11:52:05.240 16759 TRACE nova manager=CONF.cells.manager) 2014-04-29 11:52:05.240 16759 TRACE nova File ""/usr/lib/python2.7/dist-packages/nova/service.py"", line 257, in create 2014-04-29 11:52:05.240 16759 TRACE nova db_allowed=db_allowed) 2014-04-29 11:52:05.240 16759 TRACE nova File ""/usr/lib/python2.7/dist-packages/nova/service.py"", line 139, in __init__ 2014-04-29 11:52:05.240 16759 TRACE nova self.manager = manager_class(host=self.host, *args, **kwargs) 2014-04-29 11:52:05.240 16759 TRACE nova File ""/usr/lib/python2.7/dist-packages/nova/cells/manager.py"", line 87, in __init__ 2014-04-29 11:52:05.240 16759 TRACE nova self.state_manager = cell_state_manager() 2014-04-29 11:52:05.240 16759 TRACE nova TypeError: __init__() takes exactly 3 arguments (1 given)
+I have had a dig into the code and it appears that CellsManager creates an instance of CellStateManager with no arguments. CellStateManager __new__ runs and creates an instance of CellStateManagerFile which runs __new__ and __init__ with cell_state_cls and cells_config_path set. At this point __new__ returns CellStateManagerFile and the new instance's __init__() method is invoked (CellStateManagerFile.__init__) with the original arguments (there weren't any) which then results in the stack trace.
+It seems reasonable for CellStateManagerFile to derive the cells_config_path info for itself so I've patched it locally with
+=== modified file 'state.py' --- state.py 2014-04-30 15:10:16 +0000 +++ state.py 2014-04-30 15:10:26 +0000 @@ -155,7 +155,7 @@              config_path = CONF.find_file(cells_config)              if not config_path:                  raise cfg.ConfigFilesNotFoundError(config_files=[cells_config]) - return CellStateManagerFile(cell_state_cls, config_path) + return CellStateManagerFile(cell_state_cls)
+         return CellStateManagerDB(cell_state_cls)
+@@ -450,7 +450,9 @@
+ class CellStateManagerFile(CellStateManager): - def __init__(self, cell_state_cls, cells_config_path): + def __init__(self, cell_state_cls=None): + cells_config = CONF.cells.cells_config + cells_config_path = CONF.find_file(cells_config)          self.cells_config_path = cells_config_path          super(CellStateManagerFile, self).__init__(cell_state_cls)
+Ubuntu: 14.04 nova-cells: 1:2014.1-0ubuntu1
+nova.conf:
+[DEFAULT] dhcpbridge_flagfile=/etc/nova/nova.conf dhcpbridge=/usr/bin/nova-dhcpbridge logdir=/var/log/nova state_path=/var/lib/nova lock_path=/var/lock/nova force_dhcp_release=True iscsi_helper=tgtadm libvirt_use_virtio_for_bridges=True connection_type=libvirt root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf verbose=True ec2_private_dns_show_ip=True api_paste_config=/etc/nova/api-paste.ini volumes_path=/var/lib/nova/volumes enabled_apis=ec2,osapi_compute,metadata auth_strategy=keystone compute_driver=libvirt.LibvirtDriver quota_driver=nova.quota.NoopQuotaDriver
+[cells] enable=True name=cell cell_type=compute cells_config=/etc/nova/cells.json
+cells.json: {     ""parent"": {         ""name"": ""parent"",         ""api_url"": ""http://api.example.com:8774"",         ""transport_url"": ""rabbit://rabbit.example.com"",         ""weight_offset"": 0.0,         ""weight_scale"": 1.0,         ""is_parent"": true     } }
+";"Fix CellStateManagerFile init to failure 
+Currently, specifying a cells_config file in nova.conf causes
+CellStateManager to fail and in turn stops the nova-cells service from
+starting. The reason is that CellsManager creates an instance of
+CellStateManager with no arguments. CellStateManager __new__ runs and
+creates an instance of CellStateManagerFile which runs __new__ and
+__init__ with cell_state_cls and cells_config_path set. At this point
+__new__ returns CellStateManagerFile and the new instance's __init__
+method is invoked (CellStateManagerFile.__init__) with the original
+arguments (there weren't any) which then results in:
+2014-04-29 11:52:05.240 16759 TRACE nova self.state_manager =
+cell_state_manager()
+2014-04-29 11:52:05.240 16759 TRACE nova TypeError: __init__() takes
+exactly 3 arguments (1 given)
+
+It seems reasonable for CellStateManagerFile to derive the
+cells_config_path info for itself so I have updated the code with that
+change and added unit tests to catch this bug and to check that the
+correct managers are still returned
+";nova/cells/state.py;0;1;0;88ab936;1;1;88ab936;84b02ca;2;88ab936;1;88ab936;84b02ca;2
+1336127;6ddd9f93f82427ce909c7773f7a806361035a0b2;"The volumes will be deleted when creating a virtual machine fails with the parameter delete_on_termination being set true, which causes that the rescheduling fails
+when specifying a volume or an image with a user volume to create a virtual machine, if the virtual machine fails to be created for the first time with the parameter delete_on_termination being set “true”, the specified volume or the user volume will be deleted, which causes that the rescheduling fails.
+for example:
+1. upload a image
+| 62aa6627-0a07-4ab4-a99f-2d99110db03e | cirros-0.3.2-x86_64-uec | ACTIVE
+2.create a boot volume by the above image
+cinder create --image-id 62aa6627-0a07-4ab4-a99f-2d99110db03e --availability-zone nova 1
+| b821313a-9edb-474f-abb0-585a211589a6 | available | None | 1 | None | true | |
+3. create a virtual machine
+nova boot --flavor m1.tiny --nic net-id=28216e1d-f1c2-463b-8ae2-330a87e800d2 tralon_disk1 --block-device-mapping vda=b821313a-9edb-474f-abb0-585a211589a6::1:1
+ERROR (BadRequest): Block Device Mapping is Invalid: failed to get volume b821313a-9edb-474f-abb0-585a211589a6. (HTTP 400) (Request-ID: req-486f7ab5-dc08-404e-8d4c-ac570d4f4aa1)
+4. use the ""cinder list"" to find that the volume b821313a-9edb-474f-abb0-585a211589a6 has been deleted
++----+--------+------+------+-------------+----------+-------------+
+| ID | Status | Name | Size | Volume Type | Bootable | Attached to |
++----+--------+------+------+-------------+----------+-------------+
++----+--------+------+------+-------------+----------+-------------+";"Don't remove delete_on_terminate volumes on a reschedule 
+When cleaning up volumes before a reschedule if delete_on_terminate is
+True the volume would be deleted.  That's not the desired behavior so
+the volume cleanup has been moved to take place when a build is aborted.
+";nova/compute/manager.py;0;1;0;2c62e34;1;1;2c62e34;5ad1af7;2;2c62e34;1;4db4066 (BIC);21a075d;4
+1343080;e516de74c192591e890f4e9586d8e70bb8d9203e;"alternate link type in GET /images incorrectly includes the project/tenant in the URI
+Clearly nobody really uses the ""application/vnd.openstack.image"" links in the returned results from GET /v2/{tenant}/images REST API call, since the link URI returned in it is wrong.
+Glance URIs do *not* contain a project or tenant in the URI structure like Nova's REST API URIs do, but _get_alternate_link() method of the image ViewBuilder tacks it on improperly:
+    def _get_alternate_link(self, request, identifier):         """"""Create an alternate link for a specific image id.""""""         glance_url = glance.generate_glance_url()         glance_url = self._update_glance_link_prefix(glance_url)         return '/'.join([glance_url,                          request.environ[""nova.context""].project_id,                          self._collection_name,                          str(identifier)])
+It's my suspicion that nobody actually uses these alternate links anyway, but the fix is simple: just remove the request.environ['nova.context'].project_id in the URL join above.
+Note that, yet again, the image service stubs and fakes in the API unit testing masked this problem. In cleaning up the unit tests to get rid of the stubbed out image service code, I uncovered this.
+";"Remove project id in ViewBuilder alternate link 
+Clearly nobody really uses the ""application/vnd.openstack.image""
+links in the returned results from GET /v2/{tenant}/images
+REST API call, since the link URI returned in it is wrong.
+
+Glance URIs do *not* contain a project or tenant in the URI
+structure like Nova's REST API URIs do, but _get_alternate_link()
+method of the image ViewBuilder tacks it on improperly:
+";"doc/api_samples/OS-DCF/image-get-resp.json, doc/api_samples/OS-DCF/image-get-resp.xml,doc/api_samples/OS-DCF/image-list-resp.json,doc/api_samples/OS-DCF/image-list-resp.xml, doc/api_samples/OS-EXT-IMG-SIZE/image-get-resp.json, doc/api_samples/OS-EXT-IMG-SIZE/image-get-resp.xml,doc/api_samples/OS-EXT-IMG-SIZE/images-details-get-resp.json,doc/api_samples/OS-EXT-IMG-SIZE/images-details-get-resp.xml, doc/api_samples/image-get-resp.json,doc/api_samples/image-get-resp.xml,doc/api_samples/images-details-get-resp.json,doc/api_samples/images-details-get-resp.xml, doc/api_samples/images-list-get-resp.json,doc/api_samples/images-list-get-resp.xml,doc/v3/api_samples/image-size/image-get-resp.json,doc/v3/api_samples/image-size/images-details-get-resp.json, doc/v3/api_samples/images/image-get-resp.json,doc/v3/api_samples/images/images-details-get-resp.json, doc/v3/api_samples/images/images-list-get-resp.json,doc/v3/api_samples/os-disk-config/image-get-resp.json,doc/v3/api_samples/os-disk-config/image-list-resp.json,nova/api/openstack/compute/views/images.py 
+";0;1;0;e7aa4022374fb35d2131a7c633212c5d6302db3d;FP+FN;1;b957a35;c1ae5e0;7;13e346df0bc88279242ed1c56ad39b36a22c8a39;1;99c0341d84988f8bbb6e4c25a2305c46246aef28;f5e2d2829c044;2
+1350224;264425678fd4a37618c2bceae8e62f6bba778223;"VMWare: Operating System Not Found, using block device mapping for volume during VM spawn 
+When using vmware driver to attach a volume during VM spawn as below using --block-device.
+The VM will show 'Active' in openstack, but the actuall the VM couldn't be loaded. Showing 'Operating System Not Found'.
+nova boot --flavor 7 --image trend-thin --block-device source=volume,id=0fa2137c-ef9f-413c-bf6b-1a8b4fcf2e35,dest=volume,shutdown=preserve myInstanceWithVolume --nic net-id=e7ef5ccb-1718-42b6-a99c-37d5a509c339
+Note: the volume is not bootable volume. Just want to deployment the VM from backend image and then attach the volume to the VM.
+";"VMware: Accept image and block device mappings 
+The logic in spawn ignores the specified image if there
+are block device mappings in ""nova boot"".  This is incorrect
+and is a bug in the VMware driver, since the block devices
+can be blank volumes.  We should be able to accept an image
+and block device mappings in ""nova boot"".
+
+DocImpact: VMware supports nova boot with the --block-device
+option.  End users can specify the block device's bus to be
+either lsiLogic, busLogic, ide, lsiLogicsas, or paraVirtual.
+For example, nova boot --flavor m1.tiny --block-device
+source=image,dest=volume,size=1,id=<image_id>,bus=lsiLogicsas,
+bootindex=0 test
+";"nova/virt/vmwareapi/vmops.py, nova/virt/vmwareapi/volumeops.py 
+";1;0;0;0;0;0;dd52437;942b9cd;2;0;0;dd52437;942b9cd;6
+1367363;5f93c841a80663b68da2fb04df78d5acd0754d68;"Libvirt-lxc will leak nbd devices on instance shutdown 
+Shutting down a libvirt-lxc based instance will leak the nbd device. This happens because _teardown_container will only be called when libvirt domain's are running. During a shutdown, the domain is not running at the time of the destroy. Thus, _teardown_container is never called and the nbd device is never disconnected.
+Steps to reproduce: 1) Create devstack using local.conf: https://gist.github.com/ramielrowe/6ae233dc2c2cd479498a 2) Create an instance 3) Perform ps ax |grep nbd on devstack host. Observe connected nbd device 4) Shutdown instance 5) Perform ps ax |grep nbd on devstack host. Observe connected nbd device 6) Delete instance 7) Perform ps ax |grep nbd on devstack host. Observe connected nbd device
+Nova has now leaked the nbd device.
+";"Libvirt: Always teardown lxc container on destroy 
+This fixes a bug where shutting down a libvirt-lxc based instance
+would leak its underlying nbd device. This was happening because
+_teardown_container would only get called if the domain was
+present. After this fix, _teardown_container will always get called
+on a destroy, which ensures the nbd device gets disconnected.
+";nova/virt/libvirt/driver.py;0;1;0;0fcbb7b;1;1;0fcbb7b;0fcbb7b;1;0fcbb7b;1;0fcbb7b;0fcbb7b;1
+1370177;a7de013891da5afd43c2aa2dd6dad61048799230;"Lack of EC2 image attributes for volume backed snapshot. 
+For EBS images AWS returns device names, volume sizes, delete on termination flags in block device mapping structure.
+$ euca-describe-images ami-d13845e1 IMAGE ami-d13845e1 amazon/amzn-ami-hvm-2014.03.2.x86_64-ebs amazon available public x86_64 machine ebs hvm xen BLOCKDEVICEMAPPING /dev/xvda snap-d15cde24 8 true
+The same in xml form:             <blockDeviceMapping>                 <item>                     <deviceName>/dev/xvda</deviceName>                     <ebs>                         <snapshotId>snap-d15cde24</snapshotId>                         <volumeSize>8</volumeSize>                         <deleteOnTermination>true</deleteOnTermination>                         <volumeType>standard</volumeType>                     </ebs>                 </item>             </blockDeviceMapping>
+But Nova didn't do it now:
+$ euca-describe-images ami-0000000a IMAGE ami-0000000a None (sn-in) ef3ddd7aa4b24cda974200baef02730b available private machine aki-00000002 ari-00000003 instance-store BLOCKDEVICEMAPPING snap-00000005
+The same in xml form:       <blockDeviceMapping>         <item>           <ebs>             <snapshotId>snap-00000005</snapshotId>           </ebs>         </item>       </blockDeviceMapping>
+NB. In Grizzly device names and delete on termination flags was returned. It was changed by https://github.com/openstack/nova/commit/33e3d4c6b9e0b11500fe47d861110be1c1981572 Now these attributes are not stored in instance snapshots, so there is no way to output them.
+Device name is most critical attribute. Because there is another one compatibility issue (see https://bugs.launchpad.net/nova/+bug/1370250): Nova isn't able to adjust attributes of volume being created at instance launch stage. For example in AWS we can change volume size and delete on termination flag of a device by set new values in parameters of run instance command. To identify the device in image block device mapping we use device name. For example: euca-run-instances ... -b /dev/vda=:100 runs an instance with vda device increased to 100 GB. Thus if we haven't device names in images, we haven't a chance to fix this compatibility problem.
+";"snapshot: Copy some missing attrs to the snapshot bdms 
+The following commit: 33e3d4c wrongly
+drops some of the block device mapping information that is needed to
+fully describe the block device mapping. In addition - EC2 API needs
+this information to be able to format the output.
+";nova/block_device.py;0;1;0;33e3d4c6b9;1;1;33e3d4c6b9;33e3d4c6b9;1;33e3d4c6b9;1;33e3d4c6b9;33e3d4c6b9;1
+1370590;de62c0d8361bf9dae16a8ff1672229fee1c15e5e;"Libvirt _create_domain_and_network calls missing disk_info 
+When boot from block/volume was started for libvirt-lxc, a check was added to _create_domain_setup_lxc that uses disk_info to determine whether or not the instance was booted from block. While the spawn call provides disk_info via a kwarg to _create_domain_and_network, many other operations leave that information off. These calls now need to provide disk_info to _create_domain_and_network so that it is available to determine whether or not the instance was booted from block/volume. Without that data, the check will erroneously determine that the instance was booted from a volume.
+Steps to reproduce: 1) Create devstack with local.conf: https://gist.github.com/ramielrowe/520b0b86a5adf385b45d 2) Boot instance from image 3) Stop the instance 4) Start the instance 5) Observe exception in nova-compute logs: https://gist.github.com/ramielrowe/5cc2cb372fd019ee8331
+In the stack trace you can see Nova has attempted to set up the instance as if it was booted from volume.
+
+";"libvirt: Fix domain creation for LXC 
+A condition was introduced during domain creation that needs
+disk_info to determine whether or not an instance was booted from
+volume. Many calls to _create_domain_and_network were not providing
+disk_info and thus the condition was always evaluating to True.
+This change adds disk_info to each call that was missing it.
+";nova/virt/libvirt/driver.py;0;1;0;7326bac8f95;1;1;1690a1a;80deed6;5;7326bac8f95;1;53469abad39;3eea41e1e98 (BIC);2
+1371677;833357301bc80a27422f7bf081fae2d3da730a24;"Race in resource tracker causes 500 response on deleting during verify_resize state 
+During a tempest run occasionally a during the tempest.api.compute.servers.test_delete_server.DeleteServersTestJSON.test_delete_server_while_in_verify_resize_state test it will fail when the test attempts to delete a server in the verify_resize state. The failure is caused by a 500 response given being returned from nova. Looking at the nova-api log this is caused by an rpc call never receiving a response:
+http://logs.openstack.org/10/110110/40/check/check-tempest-dsvm-postgres-full/4cd8a81/logs/screen-n-api.txt.gz#_2014-09-19_10_24_07_221
+looking at the n-cpu logs for the handling of that rpc call yields:
+http://logs.openstack.org/10/110110/40/check/check-tempest-dsvm-postgres-full/4cd8a81/logs/screen-n-cpu.txt.gz#_2014-09-19_10_24_31_404
+Which looks like it is coming from attempting to updating the resource tracker being triggered by the server deletion. However the volume from that failure according to the tempest log is coming from a different test, in the test class ServerRescueNegativeTestJSON. It appears the tearDownClass for that test class is running concurrently with the failed test, and causing a race in the resource tracker, where the volume it expects to be there disappears, so when it goes to get the size it fails.
+Full logs for an example run that tripped this is here: http://logs.openstack.org/10/110110/40/check/check-tempest-dsvm-postgres-full/4cd8a81
+";"libvirt: make _get_instance_disk_info conservative 
+We want to make sure we never try to get the size of an attached volume
+when doing _get_instance_disk_info (as this can cause issues when
+gathering available resources).
+
+libvirt's get_available_resources will call upon it to determine the
+available disk size on the compute node, but do so without providing
+information about block devices. This makes _get_instance_disk_info make
+incorrect guesses as to which device is a volume
+
+This patch makes the _get_instance_disk_info be more conservative about
+it's guesses when it can not reasonably determine if a device is a
+volume or not.
+";nova/virt/libvirt/driver.py;0;1;0;5fa74bc;1;1;5fa74bc;5fa74bc;1;5fa74bc;1;5fa74bc;5fa74bc;1
+1373741;6bd4e4292648c0474e02ddc1560ce583fbe56d0;"The v2.1 API links of ""list versions"" API doesn't show v2.1
+Now v2.1 API is provided on /v2.1 URL as the default but the links does not show v2.1 like the following:
+$ curl -i 'http://192.168.11.62:8774/' -X GET -H ""Accept: application/json"" -H ""X-Auth-Project-Id: demo"" -H ""X-Auth-Token: {SHA1}a478a30ec8bdadbdb5b8f98d97bf99ac83a8a1ea"" [..] {""versions"": [   {     ""status"": ""CURRENT"", ""updated"": ""2011-01-21T11:33:21Z"", ""id"": ""v2.0"",     ""links"": [{""href"": ""http://192.168.11.62:8774/v2/"", ""rel"": ""self""}]   },   {     ""status"": ""EXPERIMENTAL"", ""updated"": ""2013-07-23T11:33:21Z"", ""id"": ""v2.1"",     ""links"": [{""href"": ""http://192.168.11.62:8774/v2/"", ""rel"": ""self""}]   } ]}
+The links is the same as v2 now, but the links should be     ""links"": [{""href"": ""http://192.168.11.62:8774/v2.1/"", ""rel"": ""self""}] ideally.
+";"Apply v2.1 API to href of version API 
+Now Nova contains v2 and v2.1 APIs, but version API returns the same
+href between v2 and v2.1 like:
+  {""href"": ""http://192.168.11.62:8774/v2/"", ""rel"": ""self""}
+in a response.
+In addition, current generate_href() handles v3 API case also. However
+v3 API has disappeared, so the code is meaningless now.
+This patch fixes the problem for returning a right href.
+";"doc/api_samples/versions-get-resp.json,nova/api/openstack/compute/views/versions.py 
+";1;0;a1baa24;0;0;0;New Lines;New Lines;0;0;0;New Lines;New Lines;0
+1375379;4f0547d4978172e29eb328bceb404335da1b9e0a;"console: wrong check when verify the server response 
+When trying to connect to a console with internal_access_path if the server does not respond by 200 we should raise an exception but the current code does not insure this case.
+https://github.com/openstack/nova/blob/master/nova/console/websocketproxy.py#L68
+The method 'find' return -1 on failure not False or 0
+";"console: fix bug when invalid connection info 
+Fixes bug when checking response returned from the server during
+a connection with internal_access_path, if the response's status
+is not 200 we should raise the exception.
+";nova/console/websocketproxy.py;0;1;0;e71e8c2;1;1;e71e8c2;e71e8c2;1;e71e8c2;1;e71e8c2;e71e8c2;1
+1381468;fdcf358eaeef6edb5c8d2dcc94f906a22882544a;"Type conflict in nova/nova/scheduler/filters/trusted_filter.py using attestation_port default value  
+When trusted filter in nova scheduler is running with default value of attestation_port:
+cfg.StrOpt('attestation_port', default='8443', help='Attestation server port'),
+method _do_request() in AttestationService class has this line:
+action_url = ""https://%s:%d%s/%s"" % (self.host, self.port, self.api_url, action_url)
+It is easy to see that default type of attestation_port is string. But in action_url self.port is required as integer (%d). It leads to conflict.
+";"Type conflict in trusted_filter.py using attestation_port default value 
+When trusted filter (nova/nova/scheduler/filters/trusted_filter.py)
+in nova scheduler is running with default value of attestation_port:
+
+default='8443'
+
+method _do_request() in AttestationService class has this line:
+
+action_url = ""https://%s:%d%s/%s"" % (self.host,
+self.port, self.api_url, action_url)
+
+It is easy to see that default type of attestation_port is string.
+But in action_url self.port is required as integer (%d).
+It leads to conflict.
+
+This change provides more tests than is required only to cover this bug
+fix. This cases are testing AttestationService _do_request() method
+using different status_codes and different texts returned by mocked
+request method.
+
+";nova/scheduler/filters/trusted_filter.py ;0;1;0;30871e870;1;1;30871e870;30871e870;1;30871e870;1;30871e870;30871e870;1
+1382630;c049f56278f4414fe366ec137fbf2caa4946c644;"access_ip_* not updated on reschedules when they should be
+For virt drivers that require networks to be reallocated on nova reschedules, the access_ip_v[4|6] fields on Instance are not updated.
+This bug was introduced when the new build_instances path was added. This new path updates access_ip_* before the instance goes ACTIVE... and it only updates when its not already set. The old path only updated the access_ip_* fields when the instance went ACTIVE...
+";"Only set access_ip_* when instance goes ACTIVE 
+When the new build path was added, access_ip_* was changed to update
+before driver.spawn() is called. On build failures with virt drivers
+that require networks to be deallocated and reallocated, access_ip_* is
+never updated again, leaving old information there.
+";nova/compute/manager.py;1;0;0;0;0;0;b199471;dce6468;2;0;0;b199471;dce6468;10
+1392798;2aea3a3d54cbe0dc9ce2b8c504818baeb1542677;"Deleted instances show power state as 'Running' 
+After deleting an instance and executing a `nova list --deleted` command as an administrator, the Power State of the deleted instance is still displayed as 'Running' and set to 1 in the database as well.
+Steps to reproduce:
+    Boot an instance:     dboik@dboik-VirtualBox:~$ nova boot foo --flavor m1.tiny --image cirros-032-x86_64-uec
+    Wait for instance to finish building:     dboik@dboik-VirtualBox:~$ nova list     +--------------------------------------+------+--------+------------+-------------+------------------+     | ID | Name | Status | Task State | Power State | Networks |     +--------------------------------------+------+--------+------------+-------------+------------------+     | 2fed0daa-b083-43cf-9285-7364ce4852ce | foo | ACTIVE | - | Running | private=10.0.0.2 |     +--------------------------------------+------+--------+------------+-------------+------------------+
+    Delete the instance:     dboik@dboik-VirtualBox:~$ nova delete foo     Request to delete server foo has been accepted.
+    As an OpenStack administrator, list the deleted instances:     dboik@dboik-VirtualBox:~$ nova list --deleted     +--------------------------------------+------+---------+------------+-------------+------------------+     | ID | Name | Status | Task State | Power State | Networks |     +--------------------------------------+------+---------+------------+-------------+------------------+     | 2fed0daa-b083-43cf-9285-7364ce4852ce | foo | DELETED | - | Running | private=10.0.0.2 |     +--------------------------------------+------+---------+------------+-------------+------------------+
+";"Update Power State after deleting instance 
+Update the power state for an instance when deleting it.
+Instead of being stuck in the 'Running' power state after deletion,
+a deleted instance will be in the NOSTATE power state.
+";nova/compute/manager.py;0;1;0;a9d0313c;0;0;New Lines;New Lines;0;0;0;New Lines;New Lines;0
+1402535;2833f8c08fcfb7961b3c64b285ceff958bf5a05e;"terminate instances boot from volume used multipath have residual device 
+Reproducing method as following:
+1、nova.conf configure iscsi_used_multipath_tool=multipath， restart nova-compute service
+2、launch instance vm1 boot from volume(used HpSan),then attach volume1 for this vm1
+3、launch instance vm2 boot from volume(used HpSan),then attach volume2 for this vm2 at the same host
+4、terminate vm2
+5、vm2 has been destoryed , but /dev/disk/by-path/ device can not be completely removed";"remove _rescan_iscsi from disconnect_volume_multipath_iscsi 
+terminating instance that attached more than one volume, disconnect
+the first volume is ok, but the first volume is not removed, then
+disconnect the second volume, disconnect_volume_multipath_iscsi
+will call _rescan_iscsi so that rescan the first device, although
+the instance is destroyed, the first device is residual, therefor
+we don't need rescan when disconnect volume.
+";nova/virt/libvirt/volume.py;0;1;0;933365a58;0;1;fc786dd;fc786dd;1;933365a58;1;5dba48b95267fa1270ff;5dba48b95267fa1270ff;1
+1402728;1b2aa11758fd52acdec0289777d276303555903b;"VMware: resize does not update cpu limits 
+A resize of a VM does not update the cpu limits correctly. That is if resources or sharing were on the flavor extra specs then they were not updated after the resize (if necessary)";"VMware: ensure that resize treats CPU limits correctly 
+Ensure that the instance cpu limits are updated correctly.
+The resize may use a flavor that requires updating the cpu
+limits etc.
+";"nova/virt/vmwareapi/vm_util.py,nova/virt/vmwareapi/vmops.py 
+";0;1;0;2bcda65d512;1;1;2bcda65;f0ef92e;3;2bcda65d512;1;a733211;b673ff4;4
+1403544;2ad3009f3595e701a866f265263ca3a0a8ef09dc;"Empty string in key_name treated as None but gets into DB 
+When creating instance, it is possible to specify ""'key_name': ''"". This empty string is treated as None by nova.compute.api._validate_and_build_base_options(), but gets written to DB. Then it breaks Horizon when it creates the ""Decrypt Password"" button for instance details view, because 'key_name' is checked to be not None.";"Do not treat empty key_name as None 
+When running instance, empty ("""") key_name is treated as None and
+keypair lookup does not happen.  However, empty string is written to
+key_name field in instance's database record.  When horizon renders
+instance info, it looks up keypair if key_name is not None.  Having
+empty string in this property generates error and instance info is not
+displayed.
+";nova/compute/api.py;0;1;0;6956057ac490c788;0;1;6b16c87;6b16c87;1;6956057ac490c788;1;6956057ac490c788;6956057ac490c788;1
+1414515;7c387637614871fac460955c0ea3beb139ae168c;"Zookeeper servicegroup driver's join() method returns a FakeLoopingCall
+The zookeeper servicegroup driver's join() method returns a FakeLoopingCall for no reason whatsoever:
+class FakeLoopingCall(loopingcall.LoopingCallBase):     """"""The fake Looping Call implementation, created for backward     compatibility with a membership based on DB.     """"""     def __init__(self, driver, host, group):         self._driver = driver         self._group = group         self._host = host
+    def stop(self):         self._driver.leave(self._host, self._group)
+    def start(self, interval, initial_delay=None):         pass
+    def wait(self):         pass
+The rest of the drivers just return None, so this is not necessary.
+";"Fix up join() and leave() methods of servicegroup 
+The join() method was not documented properly, and the Zookeeper
+driver's implementation of the join() method returned a FakeLoopingCall
+object for no reason whatsoever (the other drivers just return None), so
+it's not necessary.
+
+The leave() method wasn't used anywhere at all, therefore this patch
+removes it entirely.
+";"nova/servicegroup/api.py, nova/servicegroup/drivers/base.py, nova/servicegroup/drivers/db.py,nova/servicegroup/drivers/zk.py 
+";1;0;8880aad;0;0;0;64e167e;d4cf115;6;0;0;64e167e?;d4cf115?;9
+1419002;b838ca28e0ffda21b298a4514a647fc74c154f4a;"nova do not compain if 'my_ip' is wrong
+If my_ip in nova config do not exit on any interface of the compute host, nova-compute silently accepts it and failing cold migration.
+Expected behaviour: error or warning if my_ip can not be found on any interface.
+Nova version: 1:2014.2.1-0ubuntu1~cloud0
+";"Log warning if CONF.my_ip is not found on system 
+Explicitly check if CONF.my_ip is present in any of the network
+interfaces then log a warning to alert the operators.
+
+Code borrowed from swift:
+http://git.openstack.org/cgit/openstack/swift/tree/swift/common/utils.py#n1545
+";nova/virt/libvirt/driver.py, nova/compute/utils.py;0;1;0;2ef03c6a0a8c5705;0;0;New Lines;New Lines;0;0;0;New Lines;New Lines;0
+1424647;8f060f07c7eeb1d1356f0ce6c0e1ca6ec4ec0b96;"Allow configuring proxy_host and proxy_port in nova.conf 
+Following patch I2d46b926f1c895aba412d84b4ee059fda3df9011,
+proxy_host/proxy_port configured in nova.conf or passed via
+command line are not taking effect for novncproxy, spicehtmlproxy
+and serial proxy.";"Allow configuring proxy_host and proxy_port in nova.conf 
+Following patch I2d46b926f1c895aba412d84b4ee059fda3df9011, if
+proxy_host/proxy_port is configured in nova.conf or passed via
+command line, they are not taking effect for novncproxy, spice
+htmlproxy and serial proxy. This patch fixes the issue by
+parsing the arguments before calling baseproxy.
+";"nova/cmd/baseproxy.py, nova/cmd/novncproxy.py, nova/cmd/serialproxy.py, nova/cmd/spicehtml5proxy.py 
+";0;1;0;d2cbb9a;1;1;d2cbb9a;d2cbb9a;1;d2cbb9a;1;d2cbb9a;d2cbb9a;1
+1434855;ae3c63502096b9e16bd02f356286e396e4abb0de;"tox -e docs fails because of 2 bad json files 
+docs runtests: commands[1] | bash -c ! find doc/ -type f -name *.json | xargs -t -n1 python -m json.tool 2>&1 > /dev/null | grep -B1 -v ^python
+python -m json.tool doc//v3/api_samples/os-extended-volumes/v2.3/server-get-resp.json
+No JSON object could be decoded
+--
+python -m json.tool doc//v3/api_samples/os-extended-volumes/v2.3/servers-detail-resp.json
+No JSON object could be decoded
+ERROR: InvocationError: '/bin/bash -c ! find doc/ -type f -name *.json | xargs -t -n1 python -m json.tool 2>&1 > /dev/null | grep -B1 -v ^python'
+__________________________________________________________________________________________________________________________ summary ___________________________________________________________________________________________________________________________
+ERROR: docs: commands failed";"Fix docs build break 
+fix 2 bad json files to get the docs build to succeed.
+";"doc/v3/api_samples/os-extended-volumes/v2.3/server-get-resp.json, doc/v3/api_samples/os-extended-volumes/v2.3/servers-detail-resp.json 
+";0;1;0;abc656d;1;1;abc656d;abc656d;1;abc656d;1;abc656d;abc656d;1
+1437855;c5dfd2c3ef773b29666fae3fe75bf7548044dbf5;"Floating IPs should be associated with the first fixed IPv4 address 
+If a port attached to an instance has multiple fixed IPs and a floating IP is associated without specifying a fixed ip to associate, the behavior in Neutron is to reject the associate request. The behavior in Nova in the absence of a specified fixed ip, however, is to pick the first one from the list of fixed ips on the port.
+This is a problem if an IPv6 address is the first on the port because the floating IP will be NAT'ed to the IPv6 fixed address, which is not supported. Any attempts to reach the instance through its floating address will fail. This causes failures in certain scenario tests that use the Nova floating IP API when dual-stack IPv4+IPv6 is enabled, such as test_baremetal_basic_ops in check-tempest-dsvm-ironic-pxe_ssh in https://review.openstack.org/#/c/168063
+";"Associate floating IPs with first v4 fixed IP if none specified 
+In the absence of a specified fixed address with which to associate a
+floating IP, the first IPv4 address on the port should be associated.
+Without the check for IPv4, IPv6 ports can be associated with a (IPv4)
+floating IP, which is not supported.
+";"nova/api/openstack/compute/contrib/floating_ips.py, nova/api/openstack/compute/plugins/v3/floating_ips.py 
+";0;1;0;1b2c121f133b1;1;1;1b2c121;9a47137;2;1b2c121f133b1;1;d7fbf95 (BIC);d75a1ca;3
+1438226;c380987aa8844a46b2d50e55350e89e0791d76b6;"nova libvirt driver assumes libvirt support for CPU pinning 
+CPU pinning support was implemented as part of this blueprint:
+    http://specs.openstack.org/openstack/nova-specs/specs/juno/approved/virt-driver-cpu-pinning.html
+However, CPU pinning support is broken in some libvirt versions (summarized below), resulting in exceptions when attempting to schedule instances with the 'hw:cpu_policy' flavor key.
+We should add a libvirt version test against known broken versions and use that to determine whether or not to support the flavor keys.
+This is somewhat related to #1422775 (""nova libvirt driver assumes qemu support for NUMA pinning"").
+---
+# Testing Configuration
+Testing was conducted in a container which provided a single-node, Fedora 21-based (3.17.8-300.fc21.x86_64) OpenStack instance (built with devstack). The yum-provided libvirt and its dependencies were removed and libvirt and libvirt-python were built and installed from source.
+# Results
+The results are as follows:
+    versions status     -------- ------     1.2.9 ok     1.2.9.1 ok     1.2.9.2 fail     1.2.10 fail     1.2.11 ok     1.2.12 ok
+v1.2.9.2 is broken by this (backported) patch:
+    https://www.redhat.com/archives/libvir-list/2014-November/msg00275.html
+This can be seen as commit
+    e226772 (qemu: fix domain startup failing with 'strict' mode in numatune)
+v1.2.10 inherits is broken at checkout but can be fixed by applying these three patches (yes, one of these broke v1.2.9.2 - the irony is not lost on me):
+    [0/3] https://www.redhat.com/archives/libvir-list/2014-November/msg00274.html      - [1/3] https://www.redhat.com/archives/libvir-list/2014-November/msg00273.html      - [2/3] https://www.redhat.com/archives/libvir-list/2014-November/msg00276.html      - [3/3] https://www.redhat.com/archives/libvir-list/2014-November/msg00275.html
+# Error logs
+v1.2.9.2 produces the following exception:
+    Traceback (most recent call last):       File ""/opt/stack/nova/nova/compute/manager.py"", line 2301, in _build_resources         yield resources       File ""/opt/stack/nova/nova/compute/manager.py"", line 2171, in _build_and_run_instance         flavor=flavor)       File ""/opt/stack/nova/nova/virt/libvirt/driver.py"", line 2357, in spawn         block_device_info=block_device_info)       File ""/opt/stack/nova/nova/virt/libvirt/driver.py"", line 4376, in _create_domain_and_network         power_on=power_on)       File ""/opt/stack/nova/nova/virt/libvirt/driver.py"", line 4307, in _create_domain         LOG.error(err)       File ""/usr/lib/python2.7/site-packages/oslo_utils/excutils.py"", line 82, in __exit__         six.reraise(self.type_, self.value, self.tb)       File ""/opt/stack/nova/nova/virt/libvirt/driver.py"", line 4297, in _create_domain         domain.createWithFlags(launch_flags)       File ""/usr/lib/python2.7/site-packages/eventlet/tpool.py"", line 183, in doit         result = proxy_call(self._autowrap, f, *args, **kwargs)       File ""/usr/lib/python2.7/site-packages/eventlet/tpool.py"", line 141, in proxy_call         rv = execute(f, *args, **kwargs)       File ""/usr/lib/python2.7/site-packages/eventlet/tpool.py"", line 122, in execute         six.reraise(c, e, tb)       File ""/usr/lib/python2.7/site-packages/eventlet/tpool.py"", line 80, in tworker         rv = meth(*args, **kwargs)       File ""/usr/lib64/python2.7/site-packages/libvirt.py"", line 1029, in createWithFlags         if ret == -1: raise libvirtError ('virDomainCreateWithFlags() failed', dom=self)     libvirtError: Failed to create controller cpu for group: No such file or directory
+v1.2.10 produces the following exception:
+    Traceback (most recent call last):       File ""/opt/stack/nova/nova/compute/manager.py"", line 2342, in _build_resources         yield resources       File ""/opt/stack/nova/nova/compute/manager.py"", line 2215, in _build_and_run_instance         block_device_info=block_device_info)       File ""/opt/stack/nova/nova/virt/libvirt/driver.py"", line 2356, in spawn         block_device_info=block_device_info)       File ""/opt/stack/nova/nova/virt/libvirt/driver.py"", line 4375, in _create_domain_and_network         power_on=power_on)       File ""/opt/stack/nova/nova/virt/libvirt/driver.py"", line 4306, in _create_domain         LOG.error(err)       File ""/usr/lib/python2.7/site-packages/oslo_utils/excutils.py"", line 85, in __exit__         six.reraise(self.type_, self.value, self.tb)       File ""/opt/stack/nova/nova/virt/libvirt/driver.py"", line 4296, in _create_domain         domain.createWithFlags(launch_flags)       File ""/usr/lib/python2.7/site-packages/eventlet/tpool.py"", line 183, in doit         result = proxy_call(self._autowrap, f, *args, **kwargs)       File ""/usr/lib/python2.7/site-packages/eventlet/tpool.py"", line 141, in proxy_call         rv = execute(f, *args, **kwargs)       File ""/usr/lib/python2.7/site-packages/eventlet/tpool.py"", line 122, in execute         six.reraise(c, e, tb)       File ""/usr/lib/python2.7/site-packages/eventlet/tpool.py"", line 80, in tworker         rv = meth(*args, **kwargs)       File ""/usr/lib64/python2.7/site-packages/libvirt.py"", line 1037, in createWithFlags         if ret == -1: raise libvirtError ('virDomainCreateWithFlags() failed', dom=self)     libvirtError: Unable to write to '/sys/fs/cgroup/cpuset/system.slice/docker.service/machine.slice/machine-qemu\x2dinstance\x2d0000000a.scope/cpuset.mems': Device or resource busy
+";"libvirt: Add version check when pinning guest CPUs 
+Ensure versions of libvirt with broken CPU pinning support are not used
+for said feature. This requires the addition of a new Exception,
+specific version check functionality and unit tests for same.
+";"nova/virt/libvirt/driver.py, nova/virt/libvirt/host.py,nova/exception.py
+";1;0;d4706b8;0;0;0;069ad9a;296b09e;3;0;0;fb20cc9 (NOBIC);c29321d (NOBIC);4
+1438331;a37bc78ed57aeabbb87b26f77fd785db3ee6a9ba;"Nova fails to delete rbd image, puts guest in to ERROR state 
+When removing guests that have been booted on Ceph, Nova will occasionally put guests in to ERROR state with the following ...
+Reported to the controller:
+| fault | {""message"": ""error removing image"", ""code"": 500, ""details"": "" File \""/usr/lib/python2.7/site-packages/nova/compute/manager.py\"", line 314, in decorated_function | | | return function(self, context, *args, **kwargs) | | | File \""/usr/lib/python2.7/site-packages/nova/compute/manager.py\"", line 2525, in terminate_instance | | | do_terminate_instance(instance, bdms) | | | File \""/usr/lib/python2.7/site-packages/nova/openstack/common/lockutils.py\"", line 272, in inner | | | return f(*args, **kwargs) | | | File \""/usr/lib/python2.7/site-packages/nova/compute/manager.py\"", line 2523, in do_terminate_instance | | | self._set_instance_error_state(context, instance) | | | File \""/usr/lib/python2.7/site-packages/nova/openstack/common/excutils.py\"", line 82, in __exit__ | | | six.reraise(self.type_, self.value, self.tb) | | | File \""/usr/lib/python2.7/site-packages/nova/compute/manager.py\"", line 2513, in do_terminate_instance | | | self._delete_instance(context, instance, bdms, quotas) | | | File \""/usr/lib/python2.7/site-packages/nova/hooks.py\"", line 131, in inner | | | rv = f(*args, **kwargs) | | | File \""/usr/lib/python2.7/site-packages/nova/compute/manager.py\"", line 2482, in _delete_instance | | | quotas.rollback() | | | File \""/usr/lib/python2.7/site-packages/nova/openstack/common/excutils.py\"", line 82, in __exit__ | | | six.reraise(self.type_, self.value, self.tb) | | | File \""/usr/lib/python2.7/site-packages/nova/compute/manager.py\"", line 2459, in _delete_instance | | | self._shutdown_instance(context, instance, bdms) | | | File \""/usr/lib/python2.7/site-packages/nova/compute/manager.py\"", line 2389, in _shutdown_instance | | | requested_networks) | | | File \""/usr/lib/python2.7/site-packages/nova/openstack/common/excutils.py\"", line 82, in __exit__ | | | six.reraise(self.type_, self.value, self.tb) | | | File \""/usr/lib/python2.7/site-packages/nova/compute/manager.py\"", line 2378, in _shutdown_instance | | | block_device_info) | | | File \""/usr/lib/python2.7/site-packages/nova/virt/libvirt/driver.py\"", line 1058, in destroy | | | destroy_disks, migrate_data) | | | File \""/usr/lib/python2.7/site-packages/nova/virt/libvirt/driver.py\"", line 1173, in cleanup | | | self._cleanup_rbd(instance) | | | File \""/usr/lib/python2.7/site-packages/nova/virt/libvirt/driver.py\"", line 1218, in _cleanup_rbd | | | LibvirtDriver._get_rbd_driver().cleanup_volumes(instance) | | | File \""/usr/lib/python2.7/site-packages/nova/virt/libvirt/rbd_utils.py\"", line 266, in cleanup_volumes | | | rbd.RBD().remove(client.ioctx, volume) | | | File \""/usr/lib/python2.7/site-packages/rbd.py\"", line 300, in remove | | | raise make_ex(ret, 'error removing image') | | | "", ""created"": ""2015-03-25T14:17:14Z""}
+in nova-compute.log:
+2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/site-packages/nova/compute/manager.py"", line 314, in decorated_function 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher return function(self, context, *args, **kwargs) 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/site-packages/nova/compute/manager.py"", line 2525, in terminate_instance 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher do_terminate_instance(instance, bdms) 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/site-packages/nova/openstack/common/lockutils.py"", line 272, in inner 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher return f(*args, **kwargs) 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/site-packages/nova/compute/manager.py"", line 2523, in do_terminate_instance 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher self._set_instance_error_state(context, instance) 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/site-packages/nova/openstack/common/excutils.py"", line 82, in __exit__ 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher six.reraise(self.type_, self.value, self.tb) 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/site-packages/nova/compute/manager.py"", line 2513, in do_terminate_instance 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher self._delete_instance(context, instance, bdms, quotas) 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/site-packages/nova/hooks.py"", line 131, in inner 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher rv = f(*args, **kwargs) 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/site-packages/nova/compute/manager.py"", line 2482, in _delete_instance 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher quotas.rollback() 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/site-packages/nova/openstack/common/excutils.py"", line 82, in __exit__ 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher six.reraise(self.type_, self.value, self.tb) 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/site-packages/nova/compute/manager.py"", line 2459, in _delete_instance 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher self._shutdown_instance(context, instance, bdms) 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/site-packages/nova/compute/manager.py"", line 2389, in _shutdown_instance 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher requested_networks) 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/site-packages/nova/openstack/common/excutils.py"", line 82, in __exit__ 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher six.reraise(self.type_, self.value, self.tb) 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/site-packages/nova/compute/manager.py"", line 2378, in _shutdown_instance 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher block_device_info) 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/site-packages/nova/virt/libvirt/driver.py"", line 1058, in destroy 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher destroy_disks, migrate_data) 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/site-packages/nova/virt/libvirt/driver.py"", line 1173, in cleanup 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher self._cleanup_rbd(instance) 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/site-packages/nova/virt/libvirt/driver.py"", line 1218, in _cleanup_rbd 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher LibvirtDriver._get_rbd_driver().cleanup_volumes(instance) 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/site-packages/nova/virt/libvirt/rbd_utils.py"", line 266, in cleanup_volumes 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher rbd.RBD().remove(client.ioctx, volume) 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/site-packages/rbd.py"", line 300, in remove 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher raise make_ex(ret, 'error removing image') 2015-03-25 10:17:14.951 15287 TRACE oslo.messaging.rpc.dispatcher ImageBusy: error removing image
+";"Fixes _cleanup_rbd code to capture ImageBusy exception 
+This patch captures the rbd.ImageBusy exception and attempts to
+remove the image from the rbd volume.
+";nova/virt/libvirt/rbd_utils.py;0;1;0;13e2bd0;1;1;13e2bd0;13e2bd0;1;13e2bd0;1;13e2bd0;13e2bd0;1
+1441000;3946cfd900b18917fccdc7330bc4f070d7abd81d;"live migration gives wrong log infor 
+when doing live migration , from source host, we see
+2015-04-07 14:18:54.164 INFO nova.virt.libvirt.driver [-] [instance: 807c89f2-4818-4020-96dc-8080a8c9fcec] Migration running for 0 secs, memory 0% remaining; (bytes processed=0,                                                                             ^^^^^^^^^^^^^^^^^^^^ remaining=0, total=0) ^^^^^^^^^^^^^^^^^^
+this will lead confusion to admins
+";"Libvirt: Correct logging information and progress when LM 
+Libvirt driver gives wrong progress information when doing live migration,
+this case is happened when info.memory_total == 0, logging information will
+log out 0% remaining, which should be 100% remaining.
+This also impacts instance.progress.
+";nova/virt/libvirt/driver.py;0;1;0;7dd6a4a;1;1;7dd6a4a;7dd6a4a;1;7dd6a4a;1;7dd6a4a;7dd6a4a;1
+1443697;3a77c7c570acee40100f2fae77ef5b461997b78e;"VMware: resize always fails for image with capacity larger than 1 GB 
+Resize will fail if using 0 disk flavors in combination with images that have disks larger than 1 GB.
+Steps to reproduce: 1. Create two new flavors with disk sizes of 0. tiny and small will do 2. Create an image with a disk larger than 1 GB 3. Boot this image with tiny.0 4. Resize this image to small.0 5. Notice Horizon says nothing and the resize does nothing 6. An exception is in the Nova compute logs (stacktrace from Icehouse, but believe also an issue in Kilo)
+2015-04-13 23:32:10.676 9404 ERROR oslo.messaging.rpc.dispatcher [-] Exception during message handling: Resize error: Unable to shrink disk. 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher Traceback (most recent call last): 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/dist-packages/oslo/messaging/rpc/dispatcher.py"", line 133, in _dispatch_and_reply 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher incoming.message)) 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/dist-packages/oslo/messaging/rpc/dispatcher.py"", line 176, in _dispatch 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher return self._do_dispatch(endpoint, method, ctxt, args) 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/dist-packages/oslo/messaging/rpc/dispatcher.py"", line 122, in _do_dispatch 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher result = getattr(endpoint, method)(ctxt, **new_args) 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/dist-packages/nova/exception.py"", line 88, in wrapped 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher payload) 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/dist-packages/nova/openstack/common/excutils.py"", line 68, in __exit__ 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher six.reraise(self.type_, self.value, self.tb) 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/dist-packages/nova/exception.py"", line 71, in wrapped 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher return f(self, context, *args, **kw) 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/dist-packages/nova/compute/manager.py"", line 282, in decorated_function 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher pass 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/dist-packages/nova/openstack/common/excutils.py"", line 68, in __exit__ 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher six.reraise(self.type_, self.value, self.tb) 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/dist-packages/nova/compute/manager.py"", line 268, in decorated_function 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher return function(self, context, *args, **kwargs) 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/dist-packages/nova/compute/manager.py"", line 335, in decorated_function 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher function(self, context, *args, **kwargs) 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/dist-packages/nova/compute/manager.py"", line 256, in decorated_function 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher migration.instance_uuid, exc_info=True) 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/dist-packages/nova/openstack/common/excutils.py"", line 68, in __exit__ 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher six.reraise(self.type_, self.value, self.tb) 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/dist-packages/nova/compute/manager.py"", line 243, in decorated_function 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher return function(self, context, *args, **kwargs) 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/dist-packages/nova/compute/manager.py"", line 311, in decorated_function 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher e, sys.exc_info()) 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/dist-packages/nova/openstack/common/excutils.py"", line 68, in __exit__ 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher six.reraise(self.type_, self.value, self.tb) 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/dist-packages/nova/compute/manager.py"", line 298, in decorated_function 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher return function(self, context, *args, **kwargs) 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/dist-packages/nova/compute/manager.py"", line 3506, in resize_instance 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher self.instance_events.clear_events_for_instance(instance) 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/contextlib.py"", line 35, in __exit__ 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher self.gen.throw(type, value, traceback) 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher File ""/usr/lib/python2.7/dist-packages/nova/compute/manager.py"", line 5613, in _error_out_instance_on_exception 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher raise error.inner_exception 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher ResizeError: Resize error: Unable to shrink disk. 2015-04-13 23:32:10.676 9404 TRACE oslo.messaging.rpc.dispatcher 2015-04-13 23:32:10.678 9404 ERROR oslo.messaging._drivers.common [-] Returning exception Resize error: Unable to shrink disk. to caller
+It appears that nova compute will throw an error when attempting to resize an instance _from_ a flavor with disk size of 0 _to_ a flavor with disk size 0.
+The trick to reproducing this error is using any image that has a disk greater than 1 GB. I initially tested with cirros, tiny-iso, etc which are all less than 1 GB.
+The root cause of the problem is this code in vmops.py:1332
+        # Checks if the migration needs a disk resize down.         if (flavor['root_gb'] < instance['root_gb'] or             flavor['root_gb'] < vmdk.capacity_in_bytes / units.Gi):             reason = _(""Unable to shrink disk."")             raise exception.InstanceFaultRollback(                 exception.ResizeError(reason=reason))
+Dividing the capacity by 1 GB will result in 0 for any number less than 1 GB. However anything larger will be a positive integer. And the flavor size is always 0, so this exception is always raised in a resize of any image with capacity larger than 1 GB (which is most images).
+";"VMware: Don't raise exception on resize of 0 disk 
+An exception should not be raised if someone resizes and instance
+to a flavor with a zero disk size.
+";nova/virt/vmwareapi/vmops.py;0;1;0;f3f1a53f;1;1;f3f1a53;f3f1a53;1;0;0;New Lines;New Lines;0
+1443970;f697befdd3a0f9b81ff9a74f55e4460cd3783692;"nova-manage create networks with wrong dhcp_server in DB(nova) 
+Using nova network and creating new network 'dhcp_server' values are wrong.
+command (example) /usr/bin/nova-manage network create novanetwork 10.0.0.0/16 3 8 --vlan_start 103 --dns1 8.8.8.8 --dns2 8.8.4.4
+This happens because in file nova/network/manager.py in method _do_create_networks() the variable 'enable_dhcp' is incorrectly used in loop.
+";"Fixed incorrect dhcp_server value during nova-network creation 
+When parameter dhcp_server is None, we must use network gateway
+for each network. But because of incorrect usage of variable
+dhcp_server, we use gateway of the FIRST network for each network.
+";nova/network/manager.py;0;1;0;447641972539f1;1;1;4476419;231347e;2;447641972539f1;1;4476419;231347e;2
+1447249;7471b5a0924c8cb90b94ea122967b422d35d9c69;"Ironic: injected files not passed through to configdrive 
+The ironic driver's code to generate a configdrive does not pass injected_files through to the configdrive builder, resulting in injected files not being in the resulting configdrive.";"Ironic: pass injected files through to configdrive 
+When building the configdrive, we weren't passing the injected_files
+parameter from spawn() through to the configdrive generator. Fix it.
+";nova/virt/ironic/driver.py;0;1;0;1682c5b;1;1;1682c5b;1682c5b;1;1682c5b;1;1682c5b;1682c5b;1
+1448075;bebd00b117c68097203adc2e56e972d74254fc59;"Recent compute RPC API version bump missed out on security group parts of the api
+Because compute and security group client side RPC API:s both share the same target, they need to be bumped together like what has been done previously in 6ac1a84614dc6611591cb1f1ec8cce737972d069 and 6b238a5c9fcef0e62cefbaf3483645f51554667b.
+In fact, having two different client side RPC API:s for the same target is of little value and to avoid future mistakes should really be merged into one.
+The impact of this bug is that all security group related calls will start to fail in an upgrade scenario.
+";"Add security group calls missing from latest compute rpc api version … 
+…bump
+
+The recent compute rpc api version bump missed out on the security group
+related calls that are part of the api.
+
+One possible reason is that both compute and security group client side
+rpc api:s share a single target, which is of little value and only cause
+mistakes like this.
+
+This change eliminates future problems like this by combining them into
+one to get a 1:1 relationship between client and server api:s.
+";"nova/compute/api.py,nova/compute/manager.py,nova/compute/rpcapi.py 
+";1;0;0;0;0;0;123b28c;609713a;5;0;0;14fa7183550;07641b60f88;5
+1449028;7ca56106def7950aceecacf40b2ae8de7c846cb2;"NUMA tuning broken in select libvirt versions 
+#1438226 reported that CPU pinning was broken in select versions of libvirt. Further investigation has highlighted issues with NUMA tuning in general on these versions. On some versions of libvirt, the same error messages seen when configuring CPU pinning are seen when configuring NUMA tuning (e.g. with use of the 'hw:numa-nodes' flavor key). This would suggest that the entire NUMA tuning feature is broken on these versions, rather than just CPU pinning. The results from testing, mostly duplicated from the aforementioned bug report, are given below.
+This is somewhat related to #1422775 (""nova libvirt driver assumes qemu support for NUMA pinning"").
+---
+# Testing Configuration
+Testing was conducted in a container which provided a single-node, Fedora 21-based (3.17.8-300.fc21.x86_64) OpenStack instance (built with devstack). The yum-provided libvirt and its dependencies were removed and libvirt and libvirt-python were built and installed from source.
+# Results
+The results are as follows (currently incomplete):
+    versions status     -------- ------     1.2.9 ok     1.2.9.1 ok     1.2.9.2 fail     1.2.9.3 ok     1.2.10 ok     1.2.11 ok     1.2.12 ok
+v1.2.9.2 is broken by this (backported) patch:
+    https://www.redhat.com/archives/libvir-list/2014-November/msg00275.html
+This can be seen as commit
+    e226772 (qemu: fix domain startup failing with 'strict' mode in numatune)
+# Error logs
+v1.2.9.2 produces the following exception:
+    Traceback (most recent call last):       File ""/opt/stack/nova/nova/compute/manager.py"", line 2301, in _build_resources         yield resources       File ""/opt/stack/nova/nova/compute/manager.py"", line 2171, in _build_and_run_instance         flavor=flavor)       File ""/opt/stack/nova/nova/virt/libvirt/driver.py"", line 2357, in spawn         block_device_info=block_device_info)       File ""/opt/stack/nova/nova/virt/libvirt/driver.py"", line 4376, in _create_domain_and_network         power_on=power_on)       File ""/opt/stack/nova/nova/virt/libvirt/driver.py"", line 4307, in _create_domain         LOG.error(err)       File ""/usr/lib/python2.7/site-packages/oslo_utils/excutils.py"", line 82, in __exit__         six.reraise(self.type_, self.value, self.tb)       File ""/opt/stack/nova/nova/virt/libvirt/driver.py"", line 4297, in _create_domain         domain.createWithFlags(launch_flags)       File ""/usr/lib/python2.7/site-packages/eventlet/tpool.py"", line 183, in doit         result = proxy_call(self._autowrap, f, *args, **kwargs)       File ""/usr/lib/python2.7/site-packages/eventlet/tpool.py"", line 141, in proxy_call         rv = execute(f, *args, **kwargs)       File ""/usr/lib/python2.7/site-packages/eventlet/tpool.py"", line 122, in execute         six.reraise(c, e, tb)       File ""/usr/lib/python2.7/site-packages/eventlet/tpool.py"", line 80, in tworker         rv = meth(*args, **kwargs)       File ""/usr/lib64/python2.7/site-packages/libvirt.py"", line 1029, in createWithFlags         if ret == -1: raise libvirtError ('virDomainCreateWithFlags() failed', dom=self)     libvirtError: Failed to create controller cpu for group: No such file or directory
+";"libvirt: Disable NUMA for broken libvirt 
+Ensure versions of libvirt with broken NUMA tuning support are not used
+for said feature.
+";nova/virt/libvirt/driver.py;1;0;0;0;0;0;c380987;c380987;1;0;0;976425cc2f5 ;976425cc2f5 ;1
+1453274;96a2283c1a07f0298c57f57d8c4112c1c33b6128;"libvirt: resume instance with utf-8 name results in UnicodeDecodeError 
+This bug is very similar to https://bugs.launchpad.net/nova/+bug/1388386.
+Resuming a server that has a unicode name after suspending it results in:
+2015-05-08 15:22:30.148 4370 INFO nova.compute.manager [req-ac919325-aa2d-422c-b679-5f05ecca5d42 0688b01e6439ca32d698d20789d52169126fb41fb1a4ddafcebb97d854e836c9 6dfced8dd0df4d4d98e4a0db60526c8d - - -] [instance: 12371aa8-889d-4333-8fab-61a13f87a547] Resuming 2015-05-08 15:22:31.651 4370 ERROR nova.compute.manager [req-ac919325-aa2d-422c-b679-5f05ecca5d42 0688b01e6439ca32d698d20789d52169126fb41fb1a4ddafcebb97d854e836c9 6dfced8dd0df4d4d98e4a0db60526c8d - - -] [instance: 12371aa8-889d-4333-8fab-61a13f87a547] Setting instance vm_state to ERROR 2015-05-08 15:22:31.651 4370 TRACE nova.compute.manager [instance: 12371aa8-889d-4333-8fab-61a13f87a547] Traceback (most recent call last): 2015-05-08 15:22:31.651 4370 TRACE nova.compute.manager [instance: 12371aa8-889d-4333-8fab-61a13f87a547] File ""/usr/lib/python2.7/site-packages/nova/compute/manager.py"", line 6427, in _error_out_instance_on_exception 2015-05-08 15:22:31.651 4370 TRACE nova.compute.manager [instance: 12371aa8-889d-4333-8fab-61a13f87a547] yield 2015-05-08 15:22:31.651 4370 TRACE nova.compute.manager [instance: 12371aa8-889d-4333-8fab-61a13f87a547] File ""/usr/lib/python2.7/site-packages/nova/compute/manager.py"", line 4371, in resume_instance 2015-05-08 15:22:31.651 4370 TRACE nova.compute.manager [instance: 12371aa8-889d-4333-8fab-61a13f87a547] block_device_info) 2015-05-08 15:22:31.651 4370 TRACE nova.compute.manager [instance: 12371aa8-889d-4333-8fab-61a13f87a547] File ""/usr/lib/python2.7/site-packages/nova/virt/libvirt/driver.py"", line 2234, in resume 2015-05-08 15:22:31.651 4370 TRACE nova.compute.manager [instance: 12371aa8-889d-4333-8fab-61a13f87a547] vifs_already_plugged=True) 2015-05-08 15:22:31.651 4370 TRACE nova.compute.manager [instance: 12371aa8-889d-4333-8fab-61a13f87a547] File ""/usr/lib/python2.7/site-packages/powervc_nova/virt/powerkvm/driver.py"", line 2061, in _create_domain_and_network 2015-05-08 15:22:31.651 4370 TRACE nova.compute.manager [instance: 12371aa8-889d-4333-8fab-61a13f87a547] disk_info=disk_info) 2015-05-08 15:22:31.651 4370 TRACE nova.compute.manager [instance: 12371aa8-889d-4333-8fab-61a13f87a547] File ""/usr/lib/python2.7/site-packages/nova/virt/libvirt/driver.py"", line 4391, in _create_domain_and_network 2015-05-08 15:22:31.651 4370 TRACE nova.compute.manager [instance: 12371aa8-889d-4333-8fab-61a13f87a547] power_on=power_on) 2015-05-08 15:22:31.651 4370 TRACE nova.compute.manager [instance: 12371aa8-889d-4333-8fab-61a13f87a547] File ""/usr/lib/python2.7/site-packages/nova/virt/libvirt/driver.py"", line 4322, in _create_domain 2015-05-08 15:22:31.651 4370 TRACE nova.compute.manager [instance: 12371aa8-889d-4333-8fab-61a13f87a547] LOG.error(err) 2015-05-08 15:22:31.651 4370 TRACE nova.compute.manager [instance: 12371aa8-889d-4333-8fab-61a13f87a547] File ""/usr/lib/python2.7/site-packages/oslo_utils/excutils.py"", line 85, in __exit__ 2015-05-08 15:22:31.651 4370 TRACE nova.compute.manager [instance: 12371aa8-889d-4333-8fab-61a13f87a547] six.reraise(self.type_, self.value, self.tb) 2015-05-08 15:22:31.651 4370 TRACE nova.compute.manager [instance: 12371aa8-889d-4333-8fab-61a13f87a547] File ""/usr/lib/python2.7/site-packages/nova/virt/libvirt/driver.py"", line 4305, in _create_domain 2015-05-08 15:22:31.651 4370 TRACE nova.compute.manager [instance: 12371aa8-889d-4333-8fab-61a13f87a547] err = _LE('Error defining a domain with XML: %s') % xml 2015-05-08 15:22:31.651 4370 TRACE nova.compute.manager [instance: 12371aa8-889d-4333-8fab-61a13f87a547] UnicodeDecodeError: 'ascii' codec can't decode byte 0xc3 in position 297: ordinal not in range(128) 2015-05-08 15:22:31.651 4370 TRACE nova.compute.manager [instance: 12371aa8-889d-4333-8fab-61a13f87a547]
+The _create_domain() method has the following line:
+err = _LE('Error defining a domain with XML: %s') % xml
+which fails with the UnicodeDecodeError because the xml object has utf-8 encoding. The fix is to wrap the xml object in oslo.utils.encodeutils.safe_decode for the error message.
+I'm seeing the issue on Kilo, but it is also likely an issue on Juno as well.
+
+";"libvirt: safe_decode xml for i18n logging 
+The xml argument passed to _create_domain can be a utf-8 encoded string
+which causes a UnicodeDecodeError when it is substituted into the _LE
+unicode translated message. Safely decoding the xml argument before
+attempting to substitute it into the error message avoids the
+UnicodeDecodeError.
+";nova/virt/libvirt/driver.py;0;1;0;60c90f7;1;1;60c90f7;60c90f7;1;60c90f7;1;60c90f7;60c90f7;1
+1460875;91e46f7c85a750eb8df92652d83dcf5b79db97cd;"security group creation fails due to internal error if not specifying description 
+If not specifying description parameter on ""create a security group"" API, an internal error happens like the following:
+$ curl [..] -X POST http://192.168.11.62:8774/v2/138c5606916a468abec3dd9371e66975/os-security-groups -H ""Content-Type: application/json"" -H ""Accept: application/json"" -d '{""security_group"": {""name"": ""test""}}' HTTP/1.1 500 Internal Server Error Content-Length: 128 Content-Type: application/json; charset=UTF-8 X-Compute-Request-Id: req-1fbc1833-d87c-4f49-9b73-fc7c4bf894a6 Date: Tue, 02 Jun 2015 00:59:35 GMT
+{""computeFault"": {""message"": ""The server has either erred or is incapable of performing the requested operation."", ""code"": 500}} $
+nova-api.log is here:
+2015-06-02 00:58:25.817 TRACE nova.api.openstack action_result = self.dispatch(meth, request, action_args) 2015-06-02 00:58:25.817 TRACE nova.api.openstack File ""/opt/stack/nova/nova/api/openstack/wsgi.py"", line 911, in dispatch 2015-06-02 00:58:25.817 TRACE nova.api.openstack return method(req=request, **action_args) 2015-06-02 00:58:25.817 TRACE nova.api.openstack File ""/opt/stack/nova/nova/api/openstack/compute/contrib/security_groups.py"", line 204, in create 2015-06-02 00:58:25.817 TRACE nova.api.openstack context, group_name, group_description) 2015-06-02 00:58:25.817 TRACE nova.api.openstack File ""/opt/stack/nova/nova/network/security_group/neutron_driver.py"", line 54, in create_security_group 2015-06-02 00:58:25.817 TRACE nova.api.openstack body).get('security_group') 2015-06-02 00:58:25.817 TRACE nova.api.openstack File ""/usr/local/lib/python2.7/dist-packages/neutronclient/v2_0/client.py"", line 102, in with_params 2015-06-02 00:58:25.817 TRACE nova.api.openstack ret = self.function(instance, *args, **kwargs) 2015-06-02 00:58:25.817 TRACE nova.api.openstack File ""/usr/local/lib/python2.7/dist-packages/neutronclient/v2_0/client.py"", line 716, in create_security_group 2015-06-02 00:58:25.817 TRACE nova.api.openstack return self.post(self.security_groups_path, body=body) 2015-06-02 00:58:25.817 TRACE nova.api.openstack File ""/usr/local/lib/python2.7/dist-packages/neutronclient/v2_0/client.py"", line 298, in post 2015-06-02 00:58:25.817 TRACE nova.api.openstack headers=headers, params=params) 2015-06-02 00:58:25.817 TRACE nova.api.openstack File ""/usr/local/lib/python2.7/dist-packages/neutronclient/v2_0/client.py"", line 211, in do_request 2015-06-02 00:58:25.817 TRACE nova.api.openstack self._handle_fault_response(status_code, replybody) 2015-06-02 00:58:25.817 TRACE nova.api.openstack File ""/usr/local/lib/python2.7/dist-packages/neutronclient/v2_0/client.py"", line 185, in _handle_fault_response 2015-06-02 00:58:25.817 TRACE nova.api.openstack exception_handler_v20(status_code, des_error_body) 2015-06-02 00:58:25.817 TRACE nova.api.openstack File ""/usr/local/lib/python2.7/dist-packages/neutronclient/v2_0/client.py"", line 70, in exception_handler_v20 2015-06-02 00:58:25.817 TRACE nova.api.openstack status_code=status_code) 2015-06-02 00:58:25.817 TRACE nova.api.openstack BadRequest: Invalid input for description. Reason: 'None' is not a valid string. 2015-06-02 00:58:25.817 TRACE nova.api.openstack
+";"Add secgroup param checks for Neutron 
+If using nova-network, ""create a security group"" API call fails
+unless specifying name or description. On the other hand, if calling
+Neutron API directly without Nova proxy, we can create a security
+group without name or description.
+
+This patch enforces to specify both name and description even if using
+Neutron for consistent validation behavior between nova-network and
+Neutron.
+";nova/network/security_group/neutron_driver.py;1;0;0;0;0;0;New Lines;New Lines;0;0;0;New Lines;New Lines;0
+1466390;d4d23124a54a62607f710c44a871c0810105729a;"server group can be shown and deleted by not owner tenant 
+1. Exact version
+$ git log -1 commit 045ee0336bde6e6ac5b41efe6d3da08462b4ec7d Merge: 764c905 2a01a1b Author: Jenkins <email address hidden> Date: Thu Jun 18 06:24:08 2015 +0000
+    Merge ""Remove hv_type translation shim for powervm""
+2. log files:
+None
+3. reproduce steps:
+stack@devstack:/opt/stack/nova$ [master]$ source /home/devstack/openrc admin admin stack@devstack:/opt/stack/nova$ [master]$ nova server-group-create chenrui_group affinity +--------------------------------------+---------------+---------------+---------+----------+ | Id | Name | Policies | Members | Metadata | +--------------------------------------+---------------+---------------+---------+----------+ | f11126e8-b29c-4fcb-8a56-20e6047f025c | chenrui_group | [u'affinity'] | [] | {} | +--------------------------------------+---------------+---------------+---------+----------+ stack@devstack:/opt/stack/nova$ [master]$ source /home/devstack/openrc demo demo stack@devstack:/opt/stack/nova$ [master]$ nova server-group-get f11126e8-b29c-4fcb-8a56-20e6047f025c +--------------------------------------+---------------+---------------+---------+----------+ | Id | Name | Policies | Members | Metadata | +--------------------------------------+---------------+---------------+---------+----------+ | f11126e8-b29c-4fcb-8a56-20e6047f025c | chenrui_group | [u'affinity'] | [] | {} | +--------------------------------------+---------------+---------------+---------+----------+ stack@devstack:/opt/stack/nova$ [master]$ nova server-group-delete f11126e8-b29c-4fcb-8a56-20e6047f025c Server group f11126e8-b29c-4fcb-8a56-20e6047f025c has been successfully deleted. stack@devstack:/opt/stack/nova$ [master]$ source /home/devstack/openrc admin admin stack@devstack:/opt/stack/nova$ [master]$ nova server-group-list +----+------+----------+---------+----------+ | Id | Name | Policies | Members | Metadata | +----+------+----------+---------+----------+ +----+------+----------+---------+----------+
+Expected result: * can't be shown and deleted by demo project
+Actual result: * can be shown and deleted by demo project
+";"Fix permission issue of server group API 
+Server group was created by tenantA, but it can
+be shown and deleted by tenantB. Fix this permission
+issue, and update test cases.
+";nova/db/sqlalchemy/api.py;0;1;0;501ff41;1;1;501ff41;501ff41;1;501ff41;1;501ff41;501ff41;1
+1467451;a02deffcfab6cc9a7b0764dd36b8514f6cb1a108;"Hyper-V: fail to detach virtual hard disks 
+Nova Hyper-V driver fails to detach virtual hard disks when using the virtualizaton v1 WMI namespace.
+The reason is that it cannot find the attached resource, using the wrong resource object connection attribute.
+This affects Windows Server 2008 as well as Windows Server 2012 when the old namespace is used.
+";"Hyper-V: Fix virtual hard disk detach 
+Nova Hyper-V driver fails to detach virtual hard disks when using
+the virtualizaton v1 WMI namespace. This affects Windows Server
+2008 as well as Windows Server 2012 when the old namespace is used.
+
+The reason is that it cannot find the attached resource,
+using the wrong resource object connection attribute.
+
+This patch fixes the issue by using the right resource connection
+attribute when attempting to find an attached virtual disk resource
+by its path.
+";"nova/virt/hyperv/vmutils.py, nova/virt/hyperv/vmutilsv2.py 
+";0;1;0;0e02db2980dc4e76ef7949ba4ec131af9fc4a44d;1;1;0e02db2;0e02db2;1;0e02db2980dc4e76ef7949ba4ec131af9fc4a44d;1;a4a643e1c4f7d1;a5e90dd416efabad50ce5 (BIC);2
+1475356;7c0e2238eb003ac0c620f4b63fa92baa6675e724;"Serializer reports wrong supported version 
+The VersionedObjectSerializer is what calls object_backport in our indirection_api if we encounter an unsupported version. In order for this to work properly, we need to report the top-level object version that we're trying to deserialize, not the one we actually encountered. We depend on the conductor's object relationship mappings to guide us to a fully-supported object tree.
+Currently, the serializer is reporting the object that failed to deserialize, not the top.
+";"Fix serializer supported version reporting in object_backport 
+The serializer needs to report the version of the toplevel object
+that we were trying to deserialize when we encountered the incompatible
+version. We depend on the implementor of the indirection_api to use
+the object relationship mappings to return to us a fully-supported
+object tree based on the version at the top.
+
+This patch fixes the serializer to report the toplevel version instead
+of the one that caused the fault.
+";nova/objects/base.py;0;1;0;0eb7e35fbf;1;1;0eb7e35;0eb7e35;1;0eb7e35fbf;1;0eb7e35fbf;0eb7e35fbf;1
+1475911;74e140faf23d07e23c33f707d2278679fbc5bbde;"nova-idmapshift outputs incorrect usage 
+On my devstack, the nova-idmapshift usage outputs this:
+vagrant@vagrant-ubuntu-trusty-64:~$ nova-idmapshift usage: User Namespace FS Owner Shift [-h] [-u UID] [-g GID] [-n NOBODY] [-i]                                      [-c] [-d] [-v]                                      path User Namespace FS Owner Shift: error: too few arguments
+The usage should be ""nova-idmapshift [-h] ....."" and not ""User Namespace...""
+";"Fix the usage output of the nova-idmapshift command 
+The usage currently outputs:
+usage: User Namespace FS Owner Shift [-h] [-u UID] [-g GID] [-n NOBODY] [-i]
+                                     [-c] [-d] [-v]
+                                     path
+when it should be outputting:
+usage: nova-idmapshift .....
+";nova/cmd/idmapshift.py;0;1;0;e310985;1;1;e310985;e310985;1;e310985;1;e310985;e310985;1
+1481078;20847c25a8157a10b765387ff8dbda31f8f4e91a;"auto_disk_config image property incorrectly treated as boolean during rescue mode boot 
+Introduced in Kilo release here: https://github.com/openstack/nova/blame/90e1eacee8da05bed2b061b8df5fc4fbf5057bb2/nova/virt/xenapi/vmops.py#L707
+The auto_disk_config value is a string on the image, but is being used as if it were a boolean value. As a result, even an auto_disk_config value of ""False"" on the image will result in nova attempting to resize the root disk.
+
+";"Xen: convert image auto_disk_config value to bool before compare 
+During rescue mode the auto_disk_config value is pulled from the rescue
+image if provided.  The value is a string but it was being used as a
+boolean in an 'if' statement, leading it to be True when it shouldn't
+be.  This converts it to a boolean value before comparison.
+";nova/virt/xenapi/vmops.py;0;1;0;31f208423405;1;1;31f2084;31f2084;1;0;0;New Lines;New Lines;0
+1481164;0ed3f33028b539877abf51b5a36a0f8e5c0a5927;"Invalid root device name for volume-backed instances with libvirt 
+Since that https://review.openstack.org/#/c/189632/ is merged, root device name of volume backed instances is /dev/vdb with libvirt.
+Steps to reproduce against DevStack: 1 Boot an instance: nova --block-device source=image,dest=volume,size=1,bootindex=0,id=<xxx> --flavor m1.nano inst where xxx is an image id.
+2 Look at the device name: openstack volume list
+Expected value: /dev/vda Actual value: /dev/vdb
+Inside guest OS the volume is displayed as /dev/vda.
+";"libvirt: Fix root device name for volume-backed instances 
+Since that I76a7cfd995db6c04f7af48ff8c9acdd55750ed76 was merged, root
+device name is assigned /dev/vdb for volume-backed instances with
+libvirt.
+
+The reasons are:
+1 now device names are reset to None for all bdms before libvirt's
+get_disk_mapping call;
+2 get_disk_mapping processes the root bdm by get_info_from_bdm twice:
+as a root bdm, and as a regular bdm;
+3 for each call of get_info_from_bdm the root bdm is passed with no
+device name;
+4 get_info_from_bdm generates a new device name for each call with empty
+device name.
+
+So vda is assigned for 'root' record in mapping, but vdb - for the
+volume record.
+
+This patch updates root bdm after the first call, thus the second call
+is performed with certain device name.
+";nova/virt/libvirt/blockinfo.py;0;1;0;0ed3f33028b539877abf51b5a36a0f8e5c0a5927;0;0;New Lines;New Lines;0;0;0;New Lines;New Lines;0
+1486541;812d75ecb59c3198cf40ae81cfc97a99b5ff1a50;"Using cells, local instance deletes incorrectly use legacy bdms instead of objects 
+The instance delete code paths were changed to use new-world bdm objects in commit f5071bd1ac00ed68102d37c8025d36df6777cd9e.
+However, cells code still use the legacy format for local delete operations which is clearly wrong. Code that gets called in the parent class in nova/compute/api.py uses dot-notation and calls bdm.destroy() as well.
+";"Fix cells use of legacy bdms during local instance delete operations 
+The instance delete code paths were changed to use new-world bdm objects
+in commit f5071bd.
+
+However, cells code still use the legacy format for local delete
+operations which is clearly wrong. Code that gets called in the parent
+class in nova/compute/api.py uses dot-notation and calls bdm.destroy()
+as well.
+
+This change replace the old bdm lookup call to use objects instead.
+";nova/compute/cells_api.py;0;1;0;f5071bd1ac00ed68102d37c8025;0;0;f9a868e8;171e5f8b;3;0;0;a010630d8c5;7b488940a5b0a09;3
+1492255;f45ace1e64146f048991ae725bc431ba92f70bcd;"Cells gate job fails because of 2 network tests 
+=========== 2015-09-04 11:41:29.466 | Failed 2 tests - output below: 2015-09-04 11:41:29.467 | ============================== 2015-09-04 11:41:29.467 | 2015-09-04 11:41:29.467 | tempest.api.compute.test_networks.ComputeNetworksTest.test_list_networks[id-3fe07175-312e-49a5-a623-5f52eeada4c2] 2015-09-04 11:41:29.467 | ----------------------------------------------------------------------------------------------------------------- 2015-09-04 11:41:29.467 | 2015-09-04 11:41:29.467 | Captured traceback: 2015-09-04 11:41:29.467 | ~~~~~~~~~~~~~~~~~~~ 2015-09-04 11:41:29.467 | Traceback (most recent call last): 2015-09-04 11:41:29.467 | File ""tempest/api/compute/test_networks.py"", line 37, in test_list_networks 2015-09-04 11:41:29.467 | self.assertNotEmpty(networks, ""No networks found."") 2015-09-04 11:41:29.467 | File ""tempest/test.py"", line 588, in assertNotEmpty 2015-09-04 11:41:29.467 | self.assertTrue(len(list) > 0, msg) 2015-09-04 11:41:29.468 | File ""/opt/stack/new/tempest/.tox/all/local/lib/python2.7/site-packages/unittest2/case.py"", line 702, in assertTrue 2015-09-04 11:41:29.468 | raise self.failureException(msg) 2015-09-04 11:41:29.468 | AssertionError: False is not true : No networks found. 2015-09-04 11:41:29.468 | 2015-09-04 11:41:29.468 | 2015-09-04 11:41:29.468 | Captured pythonlogging: 2015-09-04 11:41:29.468 | ~~~~~~~~~~~~~~~~~~~~~~~ 2015-09-04 11:41:29.468 | 2015-09-04 11:31:55,672 10410 INFO [tempest_lib.common.rest_client] Request (ComputeNetworksTest:test_list_networks): 200 POST http://127.0.0.1:5000/v2.0/tokens 2015-09-04 11:41:29.468 | 2015-09-04 11:31:55,672 10410 DEBUG [tempest_lib.common.rest_client] Request - Headers: {} 2015-09-04 11:41:29.468 | Body: None 2015-09-04 11:41:29.468 | Response - Headers: {'x-openstack-request-id': 'req-d4c4b57f-495a-47d4-b157-4c6fa0c85796', 'connection': 'close', 'vary': 'X-Auth-Token', 'status': '200', 'date': 'Fri, 04 Sep 2015 11:31:55 GMT', 'content-length': '3863', 'content-type': 'application/json', 'server': 'Apache/2.4.7 (Ubuntu)'} 2015-09-04 11:41:29.469 | Body: None 2015-09-04 11:41:29.469 | 2015-09-04 11:31:56,116 10410 INFO [tempest_lib.common.rest_client] Request (ComputeNetworksTest:test_list_networks): 200 GET http://127.0.0.1:8774/v2.1/3c0808e187e34cc998b1e08946c2a928/os-networks 0.443s 2015-09-04 11:41:29.469 | 2015-09-04 11:31:56,116 10410 DEBUG [tempest_lib.common.rest_client] Request - Headers: {'Content-Type': 'application/json', 'X-Auth-Token': '<omitted>', 'Accept': 'application/json'} 2015-09-04 11:41:29.469 | Body: None 2015-09-04 11:41:29.469 | Response - Headers: {'content-location': 'http://127.0.0.1:8774/v2.1/3c0808e187e34cc998b1e08946c2a928/os-networks', 'x-openstack-nova-api-version': '2.1', 'connection': 'close', 'vary': 'X-OpenStack-Nova-API-Version', 'x-compute-request-id': 'req-bc32c33a-31c7-4634-a3d2-70188c08e150', 'status': '200', 'date': 'Fri, 04 Sep 2015 11:31:56 GMT', 'content-length': '16', 'content-type': 'application/json'} 2015-09-04 11:41:29.469 | Body: {""networks"": []} 2015-09-04 11:41:29.469 | 2015-09-04 11:41:29.469 | 2015-09-04 11:41:29.469 | tempest.api.compute.test_tenant_networks.ComputeTenantNetworksTest.test_list_show_tenant_networks[id-edfea98e-bbe3-4c7a-9739-87b986baff26] 2015-09-04 11:41:29.469 | ------------------------------------------------------------------------------------------------------------------------------------------ 2015-09-04 11:41:29.469 | 2015-09-04 11:41:29.469 | Captured traceback: 2015-09-04 11:41:29.470 | ~~~~~~~~~~~~~~~~~~~ 2015-09-04 11:41:29.470 | Traceback (most recent call last): 2015-09-04 11:41:29.470 | File ""tempest/api/compute/test_tenant_networks.py"", line 29, in test_list_show_tenant_networks 2015-09-04 11:41:29.470 | self.assertNotEmpty(tenant_networks, ""No tenant networks found."") 2015-09-04 11:41:29.470 | File ""tempest/test.py"", line 588, in assertNotEmpty 2015-09-04 11:41:29.470 | self.assertTrue(len(list) > 0, msg) 2015-09-04 11:41:29.470 | File ""/opt/stack/new/tempest/.tox/all/local/lib/python2.7/site-packages/unittest2/case.py"", line 702, in assertTrue 2015-09-04 11:41:29.470 | raise self.failureException(msg) 2015-09-04 11:41:29.470 | AssertionError: False is not true : No tenant networks found. 2015-09-04 11:41:29.470 | 2015-09-04 11:41:29.470 | 2015-09-04 11:41:29.471 | Captured pythonlogging: 2015-09-04 11:41:29.471 | ~~~~~~~~~~~~~~~~~~~~~~~ 2015-09-04 11:41:29.471 | 2015-09-04 11:35:56,176 10414 INFO [tempest_lib.common.rest_client] Request (ComputeTenantNetworksTest:test_list_show_tenant_networks): 200 POST http://127.0.0.1:5000/v2.0/tokens 2015-09-04 11:41:29.471 | 2015-09-04 11:35:56,176 10414 DEBUG [tempest_lib.common.rest_client] Request - Headers: {} 2015-09-04 11:41:29.471 | Body: None 2015-09-04 11:41:29.471 | Response - Headers: {'x-openstack-request-id': 'req-924a7b60-3136-4a35-bb65-e62bd6059d6b', 'connection': 'close', 'vary': 'X-Auth-Token', 'status': '200', 'date': 'Fri, 04 Sep 2015 11:35:56 GMT', 'content-length': '3889', 'content-type': 'application/json', 'server': 'Apache/2.4.7 (Ubuntu)'} 2015-09-04 11:41:29.471 | Body: None 2015-09-04 11:41:29.480 | 2015-09-04 11:35:56,700 10414 INFO [tempest_lib.common.rest_client] Request (ComputeTenantNetworksTest:test_list_show_tenant_networks): 200 GET http://127.0.0.1:8774/v2.1/9ebd4b4550754530b3decbd1eff3f9a3/os-tenant-networks 0.523s 2015-09-04 11:41:29.480 | 2015-09-04 11:35:56,700 10414 DEBUG [tempest_lib.common.rest_client] Request - Headers: {'Content-Type': 'application/json', 'X-Auth-Token': '<omitted>', 'Accept': 'application/json'} 2015-09-04 11:41:29.480 | Body: None 2015-09-04 11:41:29.480 | Response - Headers: {'content-location': 'http://127.0.0.1:8774/v2.1/9ebd4b4550754530b3decbd1eff3f9a3/os-tenant-networks', 'x-openstack-nova-api-version': '2.1', 'connection': 'close', 'vary': 'X-OpenStack-Nova-API-Version', 'x-compute-request-id': 'req-92192af2-91b7-4088-bb87-42b9c62fab6b', 'status': '200', 'date': 'Fri, 04 Sep 2015 11:35:56 GMT', 'content-length': '16', 'content-type': 'application/json'} 2015-09-04 11:41:29.480 | Body: {""networks"": []} 2015-09-04 11:41:29.480 |
+Occurring since 10.30am GMT :
+";"Fix Cells gate test by modifying the regressions regex 
+Ie4ffd458456d03b0b817b01bbed391f359240db2 changed some TestCases names with
+the consequence that those tests were becoming not excluded and consequently
+the cells job was failing.
+";devstack/tempest-dsvm-cells-rc;1;0;f003b63689654c99f94e;0;0;0;78ed3ae;78ed3ae;1;0;0;78ed3ae;78ed3ae;1
+1494467;205b244ca11d1039c9d57f19a47cf7e3ec6c285f;"Fix ScaleIO commands in rootwrap filters 
+Currently the ScaleIO command entry in compute.filters is this: drv_cfg: CommandFilter, /opt/emc/scaleio/sdc/bin/drv_cfg, --query_guid, root
+During CI testing, we found that it should be changed to the following: drv_cfg: CommandFilter, /opt/emc/scaleio/sdc/bin/drv_cfg, root, /opt/emc/scaleio/sdc/bin/drv_cfg, --query_guid
+";"Fix ScaleIO commands in rootwrap filters 
+Currently the ScaleIO command entry in compute.filters is this:
+drv_cfg: CommandFilter, /opt/emc/scaleio/sdc/bin/drv_cfg, --query_guid,
+root
+
+During CI testing, we found that it should be changed to the following:
+drv_cfg: CommandFilter, /opt/emc/scaleio/sdc/bin/drv_cfg, root,
+/opt/emc/scaleio/sdc/bin/drv_cfg, --query_guid
+";etc/nova/rootwrap.d/compute.filters;1;0;96bb7f9a20;0;0;0;96bb7f9a;96bb7f9a;1;0;0;96bb7f9a;96bb7f9a;1
+1505471;5252bba03e43c71f90cb2a657e6a7f396d04be75;"Service group's DB driver dies if local conductor is used 
+If using local conductor, the DB driver for servicegroup is subject to failure. It is currently only catching MessagingTimeout exceptions, which will not occur as there is no indirection API present.
+In the event of a temporary DB connection issue, the DB driver will not recover if local conductor is used.
+";"Handle DB failures in servicegroup DB driver 
+Fix an issue where when local conductor is used, the DB driver for
+servicegroup will not handle transient DB problems gracefully.  The
+patch makes the behavior consistent with messaging timeouts if remote
+conductor is used.
+";nova/servicegroup/drivers/db.py;0;1;0;64e167eb6;1;1;64e167eb6;3bc17120;2;64e167eb6;1;64e167eb6;64e167eb6;1
+1410622;fb588f87db65f28823f9e07a9900c34c7b3576a2;"nova is still broken with boto==2.35* 
+Bug 1408987 fixed one auth issue with the signature handling:
+https://review.openstack.org/#/c/146124/
+But when trying to uncap the requirement on master we hit two new failures when trying to create a security group, we get auth failures (401 failures to be exact).
+Copied from comment 14 of bug 1408987:
+This is still broken on master, when I tried to uncap the boto version on master I get new auth failures:
+http://logs.openstack.org/92/146592/1/check/check-tempest-dsvm-full/7c375f8/console.html#_2015-01-12_19_11_36_102
+2015-01-12 19:11:36.102 | tempest.thirdparty.boto.test_ec2_security_groups.EC2SecurityGroupTest.test_create_authorize_security_group 2015-01-12 19:11:36.102 | ---------------------------------------------------------------------------------------------------------- 2015-01-12 19:11:36.102 | 2015-01-12 19:11:36.102 | Captured traceback: 2015-01-12 19:11:36.102 | ~~~~~~~~~~~~~~~~~~~ 2015-01-12 19:11:36.103 | Traceback (most recent call last): 2015-01-12 19:11:36.103 | _StringException: Empty attachments: 2015-01-12 19:11:36.103 | stderr 2015-01-12 19:11:36.103 | stdout 2015-01-12 19:11:36.103 | 2015-01-12 19:11:36.103 | pythonlogging:'': {{{ 2015-01-12 19:11:36.103 | 2015-01-12 19:07:12,279 27381 DEBUG [keystoneclient.auth.identity.v2] Making authentication request to http://127.0.0.1:5000/v2.0/tokens 2015-01-12 19:11:36.103 | 2015-01-12 19:07:13,359 27381 ERROR [boto] 401 Unauthorized 2015-01-12 19:11:36.103 | 2015-01-12 19:07:13,359 27381 ERROR [boto] <?xml version=""1.0""?> 2015-01-12 19:11:36.103 | <Response><Errors><Error><Code>AuthFailure</Code><Message>Unauthorized</Message></Error></Errors><RequestID>req-81391f74-7caf-42a6-a3b8-ccd2c7d1cbdf</RequestID></Response> 2015-01-12 19:11:36.104 | }}} 2015-01-12 19:11:36.104 | 2015-01-12 19:11:36.104 | Traceback (most recent call last): 2015-01-12 19:11:36.104 | File ""tempest/thirdparty/boto/test_ec2_security_groups.py"", line 32, in test_create_authorize_security_group 2015-01-12 19:11:36.104 | group_description) 2015-01-12 19:11:36.104 | File ""tempest/services/botoclients.py"", line 84, in func 2015-01-12 19:11:36.104 | return getattr(conn, name)(*args, **kwargs) 2015-01-12 19:11:36.104 | File ""/usr/local/lib/python2.7/dist-packages/boto/ec2/connection.py"", line 3003, in create_security_group 2015-01-12 19:11:36.104 | SecurityGroup, verb='POST') 2015-01-12 19:11:36.105 | File ""/usr/local/lib/python2.7/dist-packages/boto/connection.py"", line 1207, in get_object 2015-01-12 19:11:36.105 | raise self.ResponseError(response.status, response.reason, body) 2015-01-12 19:11:36.105 | EC2ResponseError: EC2ResponseError: 401 Unauthorized 2015-01-12 19:11:36.105 | <?xml version=""1.0""?> 2015-01-12 19:11:36.105 | <Response><Errors><Error><Code>AuthFailure</Code><Message>Unauthorized</Message></Error></Errors><RequestID>req-81391f74-7caf-42a6-a3b8-ccd2c7d1cbdf</RequestID></Response>
+It's something to do with security groups this time.
+http://logs.openstack.org/92/146592/1/check/check-tempest-dsvm-full/7c375f8/logs/screen-n-api.txt.gz#_2015-01-12_19_07_13_357
+2015-01-12 19:07:13.357 24624 DEBUG nova.api.ec2.faults [-] EC2 error response: AuthFailure: Unauthorized ec2_error_response /opt/stack/new/nova/nova/api/ec2/faults.py:29
+";"Make code compatible with v4 auth and workaround webob bug. 
+Webob library has a bug Pylons/webob#149
+which causes modification of req.body after first access. So it's
+critical to calculate the body hash before any other access is made.
+
+auth_params should be empty for v4 auth algorythm.
+";nova/api/ec2/__init__.py;1;0;0;0;0;0;68111826;f7b1af9e1;3;0;0;c2e2f63b2f90b26;c2e2f63b2f90b26;1
+;;;;;;;;;25;28;;;79;;26;;;87
