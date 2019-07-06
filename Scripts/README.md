@@ -1,5 +1,4 @@
 This repository contains our research work in ElasticSearch.
-- Anallysis317Bugs.org is a file with a detailed analysis of the 317 Bug report extracted randomly from ElasticSearch. In this analysis we look for the bug introducing commit in each bug report.
 - AnalysisCommits.org is a file with the first analysis done in ElasticSearch, it has 20 bug report analyzed.
 - AnalysisTokens.org is a file with the analysis, at token level, of the last 20 Bug report from ElasticSearch.
 - Methodology-IN-ElasticSearch.org is a file which describes our methodology in the analysis of a Bug report in ElasticSearch.
