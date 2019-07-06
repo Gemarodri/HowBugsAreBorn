@@ -1,0 +1,244 @@
+This is the Query that I used to select the 20 first real Bugs on 17 Jun 2016
+  - https://github.com/elastic/elasticsearch/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aclosed+label%3Abug
+
+Here you can find the analisis of each Bug:
+*  [[https://github.com/elastic/elasticsearch/pull/18929][#18929]]:
+You can visualize the changes done by the fix commit [[https://github.com/elastic/elasticsearch/commit/a5f90dd2f1ab6241890413ec9ecf5adac28c6542][here]]
+	 - modules/lang-painless/src/main/java/org/elasticsearch/painless/MethodWriter.java --> changed a function from public void (which doesn't return any value) to public int (which must return a value)
+	 	* 75f27df: --> The first time that the line was inserted
+	 - modules/lang-painless/src/main/java/org/elasticsearch/painless/WriterConstants.java --> changed the value from null to 'bs'
+	 	* 13d16fb: --> could be the cause, in 13d16fb^ the previous commit had the same line that the fix commit wrote.
+	 		"INDY_STRING_CONCAT_BOOTSTRAP_HANDLE = bs;", the commit 13d16fb change the 'bs' for null and the fix commit change the null for 'bs' again
+	 - modules/lang-painless/src/main/java/org/elasticsearch/painless/node/EChain.java--> initialize a variable with 0 value and then save the old line in this new variable
+	 		* 1424f09: in this commit was the first time that the line was inserted in the code 
+ 			* f5be098: copied the line involved in the fix commit from his previous commit 1424f09 
+ 	
+  The bug was in the file modules/lang-painless/src/main/java/org/elasticsearch/painless/node/EChain.java, and was due to a old code for the version of Java8, with Java 8 the code worked fine but with Java 9 it failed. As one of the developer said : "in Java 9 there is no stringbuilder on stack!"
+
+ 	- Opinion: In my opinion the previous commit are not the cause, because it is an evolution of the code and the code for the different java versions were not compatibles.
+
+* [[https://github.com/elastic/elasticsearch/pull/18885][#18885]]
+You can visualize the changes done by the fix commit [[https://github.com/elastic/elasticsearch/commit/159b8f1ebd53c34a04cee95d3e1f1d3f297829c4][here]]
+  - src/main/java/org/elasticsearch/index/fielddata/fieldcomparator/BytesRefFieldComparatorSource.java -->  The fix commitd added a import and modified a if condition.
+    * 0759438: --> was the first time that the lines modified was inserted into the source code
+  - src/test/java/org/elasticsearch/search/scroll/ScrollTerminationTests.java --> This file was created in this fix commit.
+
+  - Opinion: This previous commit causes the bug.
+
+* [[https://github.com/elastic/elasticsearch/pull/18803][#18803]]
+You can visualize the changes done by the fix commit [[https://github.com/elastic/elasticsearch/commit/d733fb689b1a7182a5f62d482ee1080b1779eae5][here]]
+
+In the three files involved in the fix commit only lines were added, so we don't have acces any previous commit. The fix commit added an if sentence but we cannot blame to the up/down commits arround the new if condition because there was more than one. The other two files were test files and we don't have into account.
+* [[https://github.com/elastic/elasticsearch/pull/18794][#18794]]
+You can visualize the changes done by the fix commit [[https://github.com/elastic/elasticsearch/commit/9eea1b68339c19ef1563e8adda26d081e227e9a9][here]]
+  -  core/src/main/java/org/elasticsearch/rest/action/support/RestActions.java --> In this file changed one of the return arguments
+    * 5be79ed: this commit was the first commit that inserted the involved line in the source code.
+  The other file was a test file in which only new lines were added in the fix commit.
+
+  - Opinion: Acording to one of the developers said "flat_settings is honored in 5.0.0-alpha1 and 5.0.0-alpha2 so it appears to be a regression in 5.0.0-alpha3." the previous commit was not the cause of the bug because for the previous versions worked fine but in the new release it didn't work so they had to fix it. 
+
+* [[https://github.com/elastic/elasticsearch/pull/18740][#18740]]
+You can visualize the changes done by the fix commit [[https://github.com/elastic/elasticsearch/commit/ab168996b6b5ec4b9567242664bd9f4d9b23e8f1][here]]
+	- core/src/main/java/org/elasticsearch/index/mapper/DocumentParser.java --> The fix commit removed several lines and changed a name and adding new if sentence.
+
+	    * adcc068: (596, 598, 620,622,632,634,638,640) was the first time that this line appeared in the file, But I deleted this previous commit as the cause of the bug because this commit only affects to this line "if (builder == null) {}" and the bug was in the functions inside this sentence, per se, this lines are not the cause of any bug.
+	    * a1e251a: (597) was the first time that this line appeared in the file
+	    * 4f8895: (607,608,609) was the first time that this line appeared in the file
+	    * d84c643: (612,614,615,616,621,633,639,657-672) was the first time that this line appeared in the file
+	    
+	- Opninion, In my opinion the last commit is the cause of the bug, we noticed after reading the description of this commit and the reason of the bug report, because they are talking about the same issue. About the commit a1e251a I'm not sure because according to the description of this commit (a1e251a) "Remove the MapperBuilders utility class. We can just call constructors directly.", so maybe is not the cause of this bug. And according to 4f8895, is not the cause because this commit only added a text field to replace analyzed string fields.
+
+* [[https://github.com/elastic/elasticsearch/pull/18707][#18707]] --- Ask for another revision!!
+You can visualize the changes done by the fix commit [[https://github.com/elastic/elasticsearch/commit/43e07c0c886223c65d26a4e3bdb7815ff15abe7d][here]]
+-  core/src/main/java/org/elasticsearch/index/shard/CommitPoint.java --> The fix commit removed a function
+	* 4ff1b42: Inserted thename of the function
+	* 953a99c: inserted an if sentence, and the return value
+- core/src/main/java/org/elasticsearch/index/snapshots/blobstore/BlobStoreIndexShardRepository.java --> the fix commit deleted an import line, added two import lines, and modified 3 functions. Also, added a if sentence.
+	* 3877dc6: The fix commit deleted the import inserted in this commit
+	* bfbee38:(461) The code before and after the fix commit do the same
+	* 45ca777: (506) The code before and after the fix commit do the same
+	* 674a985: (791) The fix commit has moved this lines
+- core/src/main/java/org/elasticsearch/index/snapshots/blobstore/BlobStoreIndexShardSnapshot.java --> The fix commit deleted an import line, modified the format of if sentences, moved some lines, added new function lines, and modifies several lines.
+  	* 59d9f7e: (210-216) The code before and after the fix commit do the same
+	* 510397a: (221) The fix commit has deleted the definition of a class inserted in this commit and in this lines (281-290) the code do the same after and before the fix bug
+	* 523b071: (222-228) The fix commit has moved this lines
+	* 72e6150: (241-244) The fix commit modified a if condition inserted in this commit that could be the cause of the bug, because the bug describes something wrong with the CHECKSUM and in this sentence is refered  to CHECKSUM
+	* 058a02b: (255) The code before and after the fix commit do the same
+	* d2493ea: (292) The fix commit moved this line
+	* a119204: (427) The fix commit has deleted the definition of a class inserted in this commit and also moved lines
+	* bfbee38: (456-461)  The code before and after the fix commit do the same
+	* 90f32d4: (496) The code before and after the fix commit do the same
+- core/src/main/java/org/elasticsearch/index/store/Store.java --> Deleted an import line, and many lines too.
+	* 4ea1999: The fix commit deleted the import inserted in this commit
+	* 8b5bc26: The fix commit deleted the sentences inserted in this commit that checking that the two files are consistent
+	* 4d699bd: The fix commit deleted the sentences inserted in this commit that checking that the two files are consistent
+	* 8736543: The fix commit deleted the sentences inserted in this commit
+- core/src/main/java/org/elasticsearch/index/store/StoreFileMetaData.java--> deleting 2 import lines, and modifying some lines.
+	* 4750ccd: The fix commit deleted the import inserted in this commit
+	* b078c92: The fix commit deleted the import inserted in this commit
+	* 5008694: The fix commit added one condition more to the assert sentence, which has soe relation with the problem described in the bug report.
+	* 4ff1b42: The code before and after the fix commit do the same
+	* 72e6150: The code before and after the fix commit do the same
+- core/src/main/java/org/elasticsearch/indices/recovery/RecoveryFileChunkRequest.java --> deleted an import line, modified some lines and change the method name of other lines.
+  * 4750ccd: The fix commit deleted the import inserted in this commit
+  * 6a71eab: the fix commit deleted @Nullable
+  * 72e6150: The fix commit changed teh name of a method
+  * c02dc8f: The fix commit changed teh name of a method
+  * 219bb88: The fix commit deleted the sentences inserted in this commit
+
+- Opinion: The Title of the bug reports says "Restore of 2.x snapshot throws checksum missing exceptions on 5.0 ", So I understand that until this moment the lines work fine, but with the 5.0 and some new requirements the lines didn't work as the developers expected, so someone report the bug. The bug was caused because "The problem is, for snapshots created in 2.x, the segments_N files do not have checksums when stored in the repository, so when we try to restore a snapshot from 2.x into ES 5.0, we get this exception thrown. ", So the cause is because the new version requirements? or it's because the 2.X version forgot did the checksum when stored the files?
+
+* [[https://github.com/elastic/elasticsearch/pull/18640][#18640]]
+You can visualize the changes done by the fix commit [[https://github.com/elastic/elasticsearch/commit/24a7b7224bd834eb57d1026ceb0c455b8c48a206][here]]
+
+In this commit im' not sure ... There are a lot of previosu commits and the developer in one of the comments said this : "This only affects v5, previous versions used other mechanisms to throttle recoveries (see https://www.elastic.co/guide/en/elasticsearch/reference/2.3/recovery.html and in particular indices.recovery.concurrent_streams)" So, my intuition is that the previous commits are not responsibles.
+  - core/src/main/java/org/elasticsearch/cluster/routing/RoutingNodes.java --> The bug fixed removed many lines, added many lines and also modify some lines, renaming some variables.
+    * 58a103a: --> this commit removed custom iterators from RoutingNodes, I don't know??
+    * f5e4cd4:(117)(152-154)158 --- 142-144, I don't know??
+    * 7753420: 163 --> I I don't know??
+  - core/src/main/java/org/elasticsearch/cluster/routing/allocation/decider/ThrottlingAllocationDecider.java --> The bug fixed removed many lines, added many lines and also modify some lines, renaming some variables. Also the bug fix commit used lines written before.
+
+    * aa28b93: 112,117, 122, 123 , 146, 147  --> I don't know??
+    * b39961b: 113,114  --> I don't know
+    * c579517: 118 --> not the cause,copied lines in the fix commit
+    * f9a45fd: 121 --> not the cause,copied lines in the fix commit
+    * 14d98a7: 125 --> not the cause,copied lines in the fix commit
+    * 80ab366: 126 145 148 151- 155 --> Are not the cause because this lines correspond to return lines, and the "bug" was not in the return
+    * 5448477: 127 --> copied lines in the fix commit
+    * e53a438: 129 --> not the cause, the fix commit anly added more text into a return LOG
+    * 79ab05c: 137, 141 --> I don't know
+    * 0fa5b87: 140 --> I don't know
+
+  - Opninion:  I'm not sure, I know that some of the previous commits are not the cause of the bug but the others I can not know, According to the comment of the developer, they are not the cause, because in previous versions the lines work fine. So probably I will classify them as not responsibles.
+
+* [[https://github.com/elastic/elasticsearch/pull/18623][#18623]]
+You can visualize the changes done by the fix commit [[https://github.com/elastic/elasticsearch/commit/32e9a879b426ae72d9f4d9c6968a813823bd1272][here]]
+
+This issue report describes a failure in some test files. In the OpenStack analysis we didn't have into account these bug reports that only have test files, so in these case we must follow this rule too.
+  - core/src/test/java/org/elasticsearch/index/engine/InternalEngineTests.java
+    * 98fd45d: Increments a number in the argument of the call function.
+  - core/src/test/java/org/elasticsearch/index/engine/ShadowEngineTests.java
+    * 98fd45d : Increments a number in the argument of the call function.
+  - Opinion: The previous commit is the cause of the bug because there was a failure in the test.
+
+* [[https://github.com/elastic/elasticsearch/pull/18618][#18618]]
+You can visualize the changes done by the fix commit [[https://github.com/elastic/elasticsearch/commit/fc1696822fa2444a89e8ddcff145a8ed4d8217a3][here]]
+  - core/src/main/java/org/elasticsearch/action/support/nodes/TransportNodesAction.java --> The bug was fixed deleting and modifying some lines.
+    * 532fa06 : Was the first time that the line was inserted, was the cause of the bug because in the line was describing a local variable
+    * a0ead02: is not responsible the commit inserted a improvement in his previous commit
+    * c175e07 : is not responsible the commit removed the DiscoveryNode method in favour of existing DiscoveryNodes method. The commit only changed the method.
+    * ea99d97: Is not the cause, the fix commit deleted a variable which was been used in this line, so the fix commit had to modify this line adding the function.
+  - Opinion: the first commit is the one who caused the bug and the others are nor the cause.
+
+* [[https://github.com/elastic/elasticsearch/pull/18588][#18588]]
+
+This bug reports a wrong behaviour in the system, but this issue report doesn't have a fix commit. In the comments, you can see that this report was closed because another issue report addressed it, but this issue report wasn't a BUG report, it was a enhancement. Look at #18594.
+
+* [[https://github.com/elastic/elasticsearch/pull/18546][#18546]]
+You can visualize the changes done by the fix commit [[https://github.com/elastic/elasticsearch/commit/3d023c9ed94bf1951395223de3093891e3e97b93][here]]
+- core/src/main/java/org/elasticsearch/common/unit/TimeValue.java
+  * e68a907: It the cause of the bug because it inserted the buggy line in which there was a misplaced cast when parsing seconds.
+
+- Opinion: It's the cause of the bug.
+
+* [[https://github.com/elastic/elasticsearch/pull/18476][#18476]]
+You can visualize the changes done by the fix commit [[https://github.com/elastic/elasticsearch/commit/61f40156d3c06cf3907b41542a050071b451fa3d][here]]
+- core/src/main/java/org/elasticsearch/rest/BytesRestResponse.java
+  * e472d78: This commit inserted the bug, was the firts time that the line appeared in the code. The bug was in the LOG, it send a wrong information to the user.
+
+- Opinion: Was the cause of the bug.
+
+* [[https://github.com/elastic/elasticsearch/pull/18458][#18458]]
+You can visualize the changes done by the fix commit [[https://github.com/elastic/elasticsearch/commit/55513946827b5061be6d431da5671711ec489d6c][here]]
+  - core/src/main/java/org/elasticsearch/index/query/GeoBoundingBoxQueryParser.java --> In this fix commit only new lines was added
+
+  - Opinion: It's difficult to know which previous commit caused the bug because only added lines, and there was more than one previous commit arround the new lines so, we cannot blame any of them.
+
+* [[https://github.com/elastic/elasticsearch/pull/18450][#18450]]
+  This issue report was not closed with an fix commit because the description of the bug was already fixed in other issue report. ([[https://github.com/elastic/elasticsearch/pull/17568][#17568]])
+
+* [[https://github.com/elastic/elasticsearch/pull/18444][#18444]]
+  This issue report was not closed with an fix commit because the description of the bug was already fixed in other issue report. ([[https://github.com/elastic/elasticsearch/pull/18202][#18202]])
+
+* [[https://github.com/elastic/elasticsearch/pull/18439][#18439]]
+You can visualize the changes done by the fix commit [[https://github.com/elastic/elasticsearch/commit/808ef6cec798fb186c8638dcddec3dc25f4e9067][here]]
+  - core/src/main/java/org/elasticsearch/search/builder/SearchSourceBuilder.java -->  In this fix commit only new lines was added
+
+  - Opinion: It's difficult to know which previous commit caused the bug because only added lines, and there was more than one previous commit arround the new lines so, we cannot blame any of them.
+
+* [[https://github.com/elastic/elasticsearch/pull/18436][#18436]]
+  What we can do with these Bug reports that have more than one fix commit as this? I'm only analyze the first one, both of them ..? Because they are fixing the same thing. In OpenStack I analyzed the first one.
+  
+  I'll analyze the first one because according to the description it seems that first fixed the bug submiting a patch and then reopen it to add something more.
+  
+  You can visualize the changes done by the fix commit [[https://github.com/elastic/elasticsearch/commit/c4d3bf472bc5eaa18a1f1ffac727110a33f89b42][here]]
+  - plugins/repository-azure/src/main/java/org/elasticsearch/cloud/azure/storage/AzureStorageServiceImpl.java --> The fix commit rename a variable from blob_container to blobContainer
+  	* 11dfdfb: The fix commit renames a variable inserted in this commit.
+  	* 6046f17: The fix commit renames a variable inserted in this commit.
+  	* b91f5da: The fix commit renames a variable inserted in this commit.
+  	* 54de108: The fix commit renames a variable inserted in this commit.
+  	* 9b247f9: The fix commit renames a variable inserted in this commit.
+  	* c20371a: The fix commit renames a variable inserted in this commit.
+  	
+  - Opinion: This is a particular bug report because has more than one fix commit, but the ones who closed the bug is 'c4d3bf472bc5eaa18a1f1ffac727110a33f89b42'. The problem is that this fix commit only renamed a variable and in my opinion this was not the problem, so the previos commit weren't the cause of the bug.  
+* [[https://github.com/elastic/elasticsearch/pull/18398][#18398]]
+You can visualize the changes done by the fix commit [[https://github.com/elastic/elasticsearch/commit/ee6d29b3429d9204103823f3c63044a760d946cf][here]]
+
+Look in this issue, they have two different fixes, one of them are not labeled as bug and the other yes.
+    -  docs/reference/modules/scripting/painless.asciidoc -->They added a ';' in the documentation file, Have I have to take into account documentation files?, IIn my opinion, I will remove it because they are DOCUMENTATION are not the source code!!
+      * 25dd6425: It's not the cause
+
+    - modules/lang-painless/src/main/antlr/PainlessParser.g4 --> The fix commit modified some lines in the code.
+      * da5b07a: It's the cause of the bug
+    - modules/lang-painless/src/main/java/org/elasticsearch/painless/antlr/PainlessParser.java --> The fix commit added some lines and modified many many lines.
+      * 28164cc
+      * da5b07a 
+      * 2249a64 
+      * a37e53c
+
+    - Opinion: All the previous commit caused the bug, because they have wrong values that caused the slow compilation.
+
+* [[https://github.com/elastic/elasticsearch/pull/18388][#18388]] 
+You can visualize the changes done by the fix commit [[https://github.com/elastic/elasticsearch/commit/c5a9edf1c7707359d90e29504ef6ff7f86ad548f][here]]
+  - core/src/main/java/org/elasticsearch/index/analysis/CharMatcher.java --> The bug was fixed adding a new line.
+    * fccbe9c: this commit was the one who added the cases, so probably forgot the case that the bug mentioned.
+
+    - Opinion: The previous commit was the responsible.
+* [[https://github.com/elastic/elasticsearch/pull/18353][#18353]]
+ You can visualize the changes done by the fix commit [[https://github.com/elastic/elasticsearch/commit/0d570352ddd07478c5744856e3b33b23d00cdff5][here]]
+  - core/src/main/java/org/elasticsearch/common/util/iterable/Iterables.java --> adding lines
+  - core/src/main/java/org/elasticsearch/indices/IndexingMemoryController.java --> Inserted a space before an argument.  
+    * a356f74: it was not the responsible in this file
+
+  - core/src/main/java/org/elasticsearch/indices/IndicesService.java --> modified an argument
+    * a356f74: was the responsible.
+
+  - Opinion: In my Opnion the previous commit was the responsible of the bug, because it inserted the argument that in this fix commit was changed.
+
+* Table with some metrics after the first analysis.
+- The number of previous commits is the total number of previous commit discovered in each fix commit
+- The number of right commits are the total number of right commits inserted in the moment in which the lines were injected into the source code. (The previous commit that didn't cause the bug)  
+
+| Bug | num Previous Commit | num. right Commits | num. caused the Bug  |  num. Files |
+|-------+-------------------+--------------------+----------------------+-------------|
+| 18929 | 4                 | 4                  | 0		        |  3          |
+| 18885 | 1                 | 0                  | 1		        |  2          |
+| 18803 | 0                 | 0                  | 0 		        |  -          |
+| 18794 | 1                 | 1                  | 0			|  1          |
+| 18740 | 4                 | 3                  | 1			|  1          |
+| 18707 | 24                | 24                 | 0			|  6          |
+| 18640 | 13                | 13                 | 0			|  2          |
+| 18623 | 1                 | 0                  | 1			|  2          |
+| 18618 | 4                 | 3                  | 1			|  1          |
+| 18588 | 0                 | 0                  | 0			|  -          |
+| 18546 | 1                 | 0                  | 1			|  1          |
+| 18476 | 1                 | 0                  | 1   			|  1          |
+| 18458 | 0                 | 0                  | 0			|  1          |
+| 18450 | 0                 | 0                  | 0			|  -          |
+| 18444 | 0                 | 0                  | 0			|  -          |
+| 18439 | 0                 | 0                  | 0			|  1          |
+| 18436 | 6                 | 6                  | 0			|  1          |
+| 18398 | 6                 | 0                  | 6			|  3          |
+| 18388 | 1                 | 0                  | 1			|  1          |
+| 18353 | 1                 | 0                  | 1			|  3          |
+|-------+-------------------+--------------------+----------------------+-------------|
